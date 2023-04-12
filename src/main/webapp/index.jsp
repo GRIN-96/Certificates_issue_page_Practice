@@ -17,6 +17,6 @@
 		<input type="text" name="pw" placeholder="패스워드를 입력해주세요" /> <br/><br/> 
 		<button>전송</button>
 	</form><br/>
-	<a href="/Board/view/joinpage.jsp">아이디가 없으신가요?</a>	
+	<a href="/Board/view/joinpage.jsp"> 회원가입하기 </a>	
 </body>
 </html>
