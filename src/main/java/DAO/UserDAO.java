@@ -14,9 +14,9 @@ import DTO.UserDTO;
 public class UserDAO {
 	
 	// sql 연결을 위한 호출 
-	private Connection con;
-	private Statement stmt;
-	private PreparedStatement pstmt;
+	private Connection con;  // Connection :: DB와 JAVA를 연결시켜주는 역할을 하는 객체이다.
+	private Statement stmt; 
+	private PreparedStatement pstmt; // PreparedStatement :: SQL문을 실행할 때 실행을 위한 SQL을 DB에 전달하는 역할을 수행하는 객체다.
 	private DataSource ds;
 	
 	public UserDAO() {
