@@ -1,5 +1,8 @@
 package service;
 
+import java.sql.SQLException;
+
+import DAO.UserDAO;
 import DTO.UserDTO;
 
 public class UserService {
@@ -15,10 +18,18 @@ public class UserService {
 	}
 	
 	
-	public void joinUser(UserDTO userDTO) {
+	public void joinUser(UserDTO userDTO) throws ClassNotFoundException {
 		
+		try {
+			UserDAO userDAO = new UserDAO();
+			userDAO.joinUser(userDTO);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			// pk(id) 중복값이 있는 경우
+			System.out.println("존재하는 아이디 입니다. 다시 입력해주세요");
 		
-		
-	}
+		}
 	
+	}
 }

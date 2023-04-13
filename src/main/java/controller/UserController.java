@@ -80,7 +80,11 @@ public class UserController extends HttpServlet {
 			System.out.println(email);
 			
 			// 유저 회원가입
-			userService.joinUser(userDTO);
+			try {
+				userService.joinUser(userDTO);
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
 			
 		}
 		
