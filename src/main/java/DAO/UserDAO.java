@@ -1,30 +1,32 @@
 package DAO;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
 import DTO.UserDTO;
 
 public class UserDAO {
 	
 //	// sql 연결을 위한 호출 
-	private Connection con;  // Connection :: DB와 JAVA를 연결시켜주는 역할을 하는 객체입니다.
-	private PreparedStatement pstmt; // PreparedStatement :: SQL 쿼리를 작성하는데 도움을주는 객체 입니다.
-	private ResultSet rs;  // 결과값 담는 객체입니다.
+	Connection con = null;  // Connection :: DB와 JAVA를 연결시켜주는 역할을 하는 객체입니다.
+	PreparedStatement pstmt = null; // PreparedStatement :: SQL 쿼리를 작성하는데 도움을주는 객체 입니다.
+	ResultSet rs = null;  // 결과값 담는 객체입니다.
+	String dbURL = "jdbc:mariadb://localhost:3306/pdf";
+	String dbID = "root";
+	String dbPassword = "root";
 	
 	public UserDAO(){}
 	
+	// 회원가입
 	public boolean joinUser(UserDTO userDTO) throws SQLException, ClassNotFoundException {
 
-		String dbURL = "jdbc:mariadb://localhost:3306/pdf";
-		String dbID = "root";
-		String dbPassword = "root";
-		String driver = "org.mariadb.jdbc.Driver";
-		Class.forName(driver);  // JDBC Driver 클래스를 로드하기 위해 사용됩니다. = jdbc 접근을 도와줍니다.
+		Class.forName("org.mariadb.jdbc.Driver");  // JDBC Driver 클래스를 로드하기 위해 사용됩니다. = jdbc 접근을 도와줍니다.
 		con = DriverManager.getConnection(dbURL, dbID, dbPassword);  // DB에 연결
 		
 		// SQL QUERY 작성
@@ -33,12 +35,12 @@ public class UserDAO {
 		try {
 			// 쿼리 내 입력값 할당
 			pstmt = con.prepareStatement(SQL);  // 쿼리문 적용
-			pstmt.setNString(1, userDTO.getUser_id());
-			pstmt.setNString(2, userDTO.getUser_pw());
-			pstmt.setNString(3, userDTO.getUser_name());
-			pstmt.setDate(4, (Date) userDTO.getUser_birthday());
-			pstmt.setNString(5, userDTO.getUser_id());
-			pstmt.setNString(6, userDTO.getUser_id());
+			pstmt.setString(1, userDTO.getUser_id());
+			pstmt.setString(2, userDTO.getUser_pw());
+			pstmt.setString(3, userDTO.getUser_name());
+			pstmt.setString(4, new SimpleDateFormat("yyyy-MM-dd").format(userDTO.getUser_birthday()));
+			pstmt.setString(5, userDTO.getUser_gender());
+			pstmt.setString(6, userDTO.getUser_email());
 			
 			// 쿼리 실행
 			// compile된 DML문을 실행시켜 성공적으로 수행될 경우 1, 실패의 경우 0을 반환합니다.
@@ -47,12 +49,78 @@ public class UserDAO {
 				return true;
 			}
 			
-//			rs = pstmt.executeQuery();  // 쿼리 수행 결과를 받아와 저장하는 객체입니다.
-			
 			
 		}  finally {  // sql 쿼리 실행 성공 시 문구 호출
 			System.out.println("회원가입에 성공하셨습니다..");
 		} return false;
+	}
+	
+	// 이름, 생년월일, 이메일로 아이디 검색
+	public String userInfoId(String name, Date b_day, String email) throws ClassNotFoundException, SQLException {
+
+		Class.forName("org.mariadb.jdbc.Driver");  // JDBC Driver 클래스를 로드하기 위해 사용됩니다. = jdbc 접근을 도와줍니다.
+		con = DriverManager.getConnection(dbURL, dbID, dbPassword);  // DB에 연결
+		
+		// 리턴할 객체 생성
+		String user_id = null;  
+		
+		// SQL QUERY 작성  = 아이디 찾기
+		String SQL = "SELECT user_id FROM user WHERE user_name = ? and user_birthday = ? and user_email = ? ";
+
+		try {
+			// 쿼리문 적용
+			pstmt = con.prepareStatement(SQL); 
+			pstmt.setString(1, name);
+			pstmt.setString(2, new SimpleDateFormat("yyyy-MM-dd").format(b_day));
+			pstmt.setString(3, email);
+			
+			rs = pstmt.executeQuery();  // 쿼리 수행 결과를 받아와 저장하는 객체입니다.
+			
+			// .next() : 수행결과로 ResultSet객체에서 하나의 Row를 반환한다. 더이상 결과가 없을 경우 false를 반환하면서 리턴합니다.
+			while(rs.next()) {
+				user_id = rs.getString("user_id");
+			}
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}  
+		
+		return user_id;
+	}
+	
+	//
+	public ArrayList<UserDTO> userDatas() throws ClassNotFoundException, SQLException {
+		
+		Class.forName("org.mariadb.jdbc.Driver");  // JDBC Driver 클래스를 로드하기 위해 사용됩니다. = jdbc 접근을 도와줍니다.
+		con = DriverManager.getConnection(dbURL, dbID, dbPassword);  // DB에 연결
+		
+		// 리턴할 객체 생성
+		ArrayList<UserDTO> lists = new ArrayList<UserDTO>();  
+		
+		// SQL QUERY 작성  = 아이디 찾기
+		String SQL = "SELECT * FROM user";
+		
+		pstmt = con.prepareStatement(SQL); 
+		
+		rs = pstmt.executeQuery(); // 모든 정보 담기
+		
+		while (rs.next()) {
+			
+			UserDTO userDTO = new UserDTO(
+					rs.getString("user_id"),
+					rs.getString("user_pw"),
+					rs.getString("user_name"),
+					rs.getDate("user_birthday"),
+					rs.getString("user_gender"),
+					rs.getString("user_email"),
+					rs.getTimestamp("user_joindate"));
+			
+			lists.add(userDTO);  // 객체 생성 후 리스트추가
+		}
+		
+		return lists;
+		
 	}
 	
 }

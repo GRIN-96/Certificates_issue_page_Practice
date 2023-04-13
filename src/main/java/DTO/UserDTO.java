@@ -12,8 +12,19 @@ public class UserDTO {
 	private String user_email;
 	private Timestamp user_joindate;
 	
-	// 생성자 함수
+	
 	public UserDTO() {}
+	
+	
+	// 생성자 함수
+	public UserDTO(String user_id, String user_pw, String user_name, java.sql.Date b_day, String user_gender, String user_email, Timestamp user_joindate) {
+		this.user_id = user_id;
+		this.user_pw = user_pw;
+		this.user_name = user_name;
+		this.user_birthday = b_day;
+		this.user_gender = user_gender;
+		this.user_joindate = user_joindate;
+	}
 	
 	// insert DB를 위한 생성자함수
 	public UserDTO(String user_id, String user_pw, String user_name, Date b_day, String user_gender, String user_email) {

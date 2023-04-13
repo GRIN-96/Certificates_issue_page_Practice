@@ -21,5 +21,6 @@
 		<input type="text" name="email" placeholder="e-mail 주소를 입력해주세요" /> <br/><br/>
 		<button>전송</button>
 	</form><br/>
+	<br/>
 </body>
 </html>

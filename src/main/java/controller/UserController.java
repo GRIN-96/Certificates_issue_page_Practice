@@ -1,9 +1,11 @@
 package controller;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.servlet.ServletException;
@@ -12,6 +14,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import DAO.UserDAO;
 import DTO.UserDTO;
 import service.UserService;
 
@@ -85,6 +88,23 @@ public class UserController extends HttpServlet {
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
+			
+		}
+		else if (action.equals("userinfo_id")) {
+			
+			// 아이디 찾기
+			String user_id = null;
+			try {
+				user_id = userService.userInfoId(name, b_day, email);
+			} catch (ClassNotFoundException | SQLException e) {
+				e.printStackTrace();
+			}
+			
+			System.out.println(user_id);
+		}
+		else if (action.equals("allUserData")) {
+			
+			ArrayList<UserDTO> lists = new ArrayList<UserDTO>();
 			
 		}
 		

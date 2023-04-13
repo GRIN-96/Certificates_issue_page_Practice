@@ -1,6 +1,8 @@
 package service;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
 
 import DAO.UserDAO;
 import DTO.UserDTO;
@@ -9,6 +11,7 @@ public class UserService {
 	
 	// 서비스를 외부에서도 사용할 수 있도록 오브젝트를 생성해줍니다.
 	public static UserService instance = new UserService();
+	UserDAO userDAO = new UserDAO();  // 객체 생성
 	
 	private UserService() {}
 	
@@ -17,11 +20,10 @@ public class UserService {
 		return instance;
 	}
 	
-	
+	// 회원가입
 	public void joinUser(UserDTO userDTO) throws ClassNotFoundException {
 		
 		try {
-			UserDAO userDAO = new UserDAO();
 			userDAO.joinUser(userDTO);
 			
 		} catch (SQLException e) {
@@ -32,4 +34,28 @@ public class UserService {
 		}
 	
 	}
+	
+	// 아이디 찾기
+	public String userInfoId(String name, Date b_day, String email) throws ClassNotFoundException, SQLException {
+		String user_id =userDAO.userInfoId(name, b_day, email);
+		return user_id;
+	}
+	
+	
+	// 유저 리스트 가져오기
+	public ArrayList<UserDTO> userDatas() {
+		
+		ArrayList<UserDTO> lists = new ArrayList<UserDTO>();
+		
+		try {
+			lists = userDAO.userDatas();
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return lists;
+		
+	}
+	
+
 }
