@@ -40,6 +40,19 @@ public class UserController extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		
+		String action = request.getParameter("action");
+		
+		// 전체 회원 리스트 불러오기.
+		if (action.equals("allUserData")) {
+			
+			ArrayList<UserDTO> lists = new ArrayList<UserDTO>();
+			
+			lists = userService.userDatas();
+			
+			System.out.println(lists);
+		}
+		
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -75,12 +88,12 @@ public class UserController extends HttpServlet {
 			
 			UserDTO userDTO = new UserDTO(id, pw, name, b_day, gender, email);
 			
-			System.out.println(id);
-			System.out.println(pw);
-			System.out.println(name);
-			System.out.println(gender);
-			System.out.println(bday);
-			System.out.println(email);
+//			System.out.println(id);
+//			System.out.println(pw);
+//			System.out.println(name);
+//			System.out.println(gender);
+//			System.out.println(bday);
+//			System.out.println(email);
 			
 			// 유저 회원가입
 			try {
@@ -90,9 +103,9 @@ public class UserController extends HttpServlet {
 			}
 			
 		}
+		// 아이디 찾기
 		else if (action.equals("userinfo_id")) {
 			
-			// 아이디 찾기
 			String user_id = null;
 			try {
 				user_id = userService.userInfoId(name, b_day, email);
@@ -102,12 +115,19 @@ public class UserController extends HttpServlet {
 			
 			System.out.println(user_id);
 		}
-		else if (action.equals("allUserData")) {
+		// 로그인
+		else if (action.equals("login")) {
 			
-			ArrayList<UserDTO> lists = new ArrayList<UserDTO>();
-			
+			try {
+				userService.logIn(id, pw);
+				
+				response.sendRedirect("/index.jsp");
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
-		
 	}
 
 }

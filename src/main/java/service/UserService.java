@@ -4,6 +4,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.servlet.http.HttpSession;
+
 import DAO.UserDAO;
 import DTO.UserDTO;
 
@@ -55,6 +57,12 @@ public class UserService {
 		
 		return lists;
 		
+	}
+	
+	// 로그인
+	public void logIn(String id, String pw) throws ClassNotFoundException, SQLException {
+		
+		userDAO.logIn(id, pw);
 	}
 	
 
