@@ -86,9 +86,6 @@ public class UserController extends HttpServlet {
 		HttpSession session = request.getSession();
 		
 		
-//		RequestDispatcher dispatcher = request.getRequestDispatcher("/view/NewCertificates.jsp");  // jsp 매핑
-//		dispatcher.forward(request, response);  // 위 페이지로 제어 전달.
-		
 		// 회원가입
 		if (action.equals("join")) {   
 			
