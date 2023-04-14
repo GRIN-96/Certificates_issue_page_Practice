@@ -147,8 +147,53 @@ public class UserController extends HttpServlet {
 				e.printStackTrace();
 			}
 			
-			System.out.println(user_id);
 		}
+		//패스워드 찾기 1 -> 회원인증 후 패스워드 변경
+		else if (action.equals("userinfo_pw")) {
+			
+			// String 값으로 받아온 birthday 변수를 Date type으로 변경해주는 작업입니다.
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+			Date b_day = null;
+			
+			try {
+				b_day = df.parse(bday);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			
+			String user_id = null;
+			
+			try {
+				user_id = userService.userInfoId(name, b_day, email);
+				
+				if (user_id != null) {
+					System.out.println("회원인증이 완료되었습니다.");
+					response.sendRedirect("../Board/view/newpw.jsp");
+				}
+			} catch (ClassNotFoundException | SQLException e) {
+				e.printStackTrace();
+			}
+			
+		}
+		//패스워드 찾기 2 -> 회원인증 후 패스워드 변경
+		else if (action.equals("new_pw")) {
+			
+				String new_pw = request.getParameter("new_pw");
+			
+				if (userService.newPw(id, new_pw)) {
+				
+					System.out.println("비밀번호가 변경되었습니다.");
+					
+					session.removeAttribute("id");
+					
+					response.sendRedirect("../Board/");
+				}else {
+					System.out.println("비밀번호 변경에 실패하였습니다. 다시시도해 주세요");
+					response.sendRedirect("../Board/view/failpage.jsp");
+			}
+			
+		}
+		
 		// 로그인
 		else if (action.equals("login")) {
 			

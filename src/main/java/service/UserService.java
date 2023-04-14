@@ -44,6 +44,22 @@ public class UserService {
 		return user_id;
 	}
 	
+	// 비밀번호 찾기 -> 비밀번호 변경
+	public boolean newPw(String id, String new_pw) {
+		
+		try {
+			if (userDAO.newPw(id, new_pw)) {
+				return true;
+			}else {
+				return false;
+			}
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+		
+	}
+	
 	
 	// 유저 리스트 가져오기
 	public ArrayList<UserDTO> userDatas() {

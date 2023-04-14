@@ -7,7 +7,7 @@
 <title>Manager Page</title>
 </head>
 <body>
-	<h1> 이수자 추가하기 </h1>
+	<h1> BOARD TABLE </h1>
 	
 </body>
 </html>

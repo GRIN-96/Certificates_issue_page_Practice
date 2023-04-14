@@ -13,6 +13,16 @@ public class BoardDTO {
 	public BoardDTO() {}
 	
 	// db insert를 위한 생성자함수
+	public BoardDTO(Long board_id, String agency, String education, String content, String position, String issurer) {
+		this.board_id = board_id;
+		this.agency = agency;
+		this.education = education;
+		this.content = content;
+		this.position = position;
+		this.issurer = issurer;
+	}
+	
+	// db insert를 위한 생성자함수
 	public BoardDTO(String agency, String education, String content, String position, String issurer) {
 		this.agency = agency;
 		this.education = education;

@@ -20,7 +20,7 @@
 	
 	<a href="/Board/view/joinpage.jsp"> 회원가입하기</a> <br/><br/>
 	<a href="/Board/view/userinfo.jsp"> 아이디찾기 </a>&nbsp
-	<a href="/Board/view/userinfo.jsp"> 비밀번호찾기 </a> <br/><br/>
+	<a href="/Board/view/userPw.jsp"> 비밀번호찾기 </a> <br/><br/>
 	<a href="/Board/UserController?action=allUserData"> 회원 리스트 출력하기 </a>
 </body>
 </html>

@@ -94,7 +94,32 @@ public class UserDAO {
 		return user_id;
 	}
 	
-	//
+	// 비밀번호 찾기 -> 비밀번호 변경
+	public boolean newPw(String id, String new_pw) throws ClassNotFoundException, SQLException {
+		
+		Class.forName("org.mariadb.jdbc.Driver");  // JDBC Driver 클래스를 로드하기 위해 사용됩니다. = jdbc 접근을 도와줍니다.
+		con = DriverManager.getConnection(dbURL, dbID, dbPassword);  // DB에 연결
+		
+		// SQL QUERY 작성  = 비밀번호 변경 ( UPDATE )
+		String SQL = "UPDATE user SET user_pw = ? WHERE user_id = ?";
+		
+		pstmt = con.prepareStatement(SQL); 
+		
+		pstmt.setString(1, BCrypt.hashpw(new_pw, BCrypt.gensalt(10)));
+		pstmt.setString(2, id);
+		
+		// compile된 DML문을 실행시켜 성공적으로 수행될 경우 1, 실패의 경우 0을 반환합니다.
+		int result = pstmt.executeUpdate(); 
+		if (result == 1) {
+			return true;
+		}else {
+			return false;
+		}
+		
+		
+	}
+	
+	// 모든 회원의 정보 불러오기
 	public ArrayList<UserDTO> userDatas() throws ClassNotFoundException, SQLException {
 		
 		Class.forName("org.mariadb.jdbc.Driver");  // JDBC Driver 클래스를 로드하기 위해 사용됩니다. = jdbc 접근을 도와줍니다.
@@ -189,6 +214,8 @@ public class UserDAO {
 				int result = pstmt.executeUpdate(); 
 				if (result == 1) {
 					return true;
+				}else {
+					return false;
 				}
 				
 			}
