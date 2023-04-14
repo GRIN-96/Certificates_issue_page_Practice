@@ -13,8 +13,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import DAO.UserDAO;
 import DTO.UserDTO;
 import service.UserService;
 
@@ -32,6 +32,7 @@ public class UserController extends HttpServlet {
 	
 	// 서비스 클래스 사용을 위해 호출을 해줍니다.
 	private static UserService userService = UserService.getInstance();
+
        
 	// 실행함수
     public UserController() {
@@ -42,6 +43,7 @@ public class UserController extends HttpServlet {
 		
 		
 		String action = request.getParameter("action");
+		HttpSession session = request.getSession();
 		
 		// 전체 회원 리스트 불러오기.
 		if (action.equals("allUserData")) {
@@ -51,6 +53,19 @@ public class UserController extends HttpServlet {
 			lists = userService.userDatas();
 			
 			System.out.println(lists);
+			
+			response.sendRedirect("../Board/");
+		}
+		
+		// 로그아웃
+		else if (action.equals("logout"))  {
+			
+			System.out.println("로그아웃 되었습니다.");
+			
+			session.removeAttribute("id");
+			
+			response.sendRedirect("../Board/");
+			
 		}
 		
 	}
@@ -68,16 +83,7 @@ public class UserController extends HttpServlet {
 		String gender = request.getParameter("gender");
 		String bday = request.getParameter("bday");
 		String email = request.getParameter("email");
-		
-		// String 값으로 받아온 birthday 변수를 Date type으로 변경해주는 작업입니다.
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-		Date b_day = null;
-		
-		try {
-			b_day = df.parse(bday);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+		HttpSession session = request.getSession();
 		
 		
 //		RequestDispatcher dispatcher = request.getRequestDispatcher("/view/NewCertificates.jsp");  // jsp 매핑
@@ -86,18 +92,35 @@ public class UserController extends HttpServlet {
 		// 회원가입
 		if (action.equals("join")) {   
 			
+			// String 값으로 받아온 birthday 변수를 Date type으로 변경해주는 작업입니다.
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+			Date b_day = null;
+			
+			try {
+				b_day = df.parse(bday);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			
 			UserDTO userDTO = new UserDTO(id, pw, name, b_day, gender, email);
 			
-//			System.out.println(id);
-//			System.out.println(pw);
-//			System.out.println(name);
-//			System.out.println(gender);
-//			System.out.println(bday);
-//			System.out.println(email);
+			System.out.println(id);
+			System.out.println(pw);
+			System.out.println(name);
+			System.out.println(gender);
+			System.out.println(bday);
+			System.out.println(email);
 			
 			// 유저 회원가입
 			try {
-				userService.joinUser(userDTO);
+				if (userService.joinUser(userDTO)) {
+					
+					response.sendRedirect("../Board/");
+					
+				}else {
+					System.out.println("회원가입에 실패하였습니다. 다시시도해 주세요");
+					response.sendRedirect("../Board/view/failpage.jsp");
+				}
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
@@ -105,6 +128,17 @@ public class UserController extends HttpServlet {
 		}
 		// 아이디 찾기
 		else if (action.equals("userinfo_id")) {
+			
+			// String 값으로 받아온 birthday 변수를 Date type으로 변경해주는 작업입니다.
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+			Date b_day = null;
+			
+			try {
+				b_day = df.parse(bday);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			
 			
 			String user_id = null;
 			try {
@@ -118,16 +152,65 @@ public class UserController extends HttpServlet {
 		// 로그인
 		else if (action.equals("login")) {
 			
+			String user_id = null; 
+			
 			try {
-				userService.logIn(id, pw);
+				user_id = userService.logIn(id, pw);
 				
-				response.sendRedirect("/index.jsp");
+				if (user_id != null) { 
+				
+				// 세션 생성 => 현재 사이트에서 어디에서든 읽을 수 있는 변수 (db메모리사용)
+				session.setAttribute("id", user_id);
+				
+				System.out.println("로그인이 완료되었습니다.");
+				
+				response.sendRedirect("../Board/Home"); // home 으로 이동
+				
+				}else {
+					System.out.println("로그인에 실패하였습니다. 다시시도해 주세요");
+					response.sendRedirect("../Board/view/failpage.jsp");
+				}
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
+		// 비밀번호 변경
+		else if (action.equals("pw_change")) {
+			
+			String new_pw = request.getParameter("new_pw");
+			
+			if (userService.pwChange(id, pw, new_pw)) {
+				
+				System.out.println("비밀번호가 변경되었습니다.");
+				
+				session.removeAttribute("id");
+				
+				response.sendRedirect("../Board/");
+			}else {
+				System.out.println("비밀번호 변경에 실패하였습니다. 다시시도해 주세요");
+				response.sendRedirect("../Board/view/failpage.jsp");
+			}
+			
+		}
+		// 회원 탈퇴
+		else if (action.equals("user_delete")) {
+			
+			if (userService.userDelete(id, pw)) {
+				
+				System.out.println("회원탈퇴가 완료되었습니다.");
+				
+				session.removeAttribute("id");
+				
+				response.sendRedirect("../Board/");
+			}else {
+				System.out.println("회원탈퇴에 실패하였습니다. 다시시도해 주세요");
+				response.sendRedirect("../Board/view/failpage.jsp");
+			}
+			
+		}
+		
 	}
 
 }

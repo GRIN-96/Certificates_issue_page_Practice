@@ -23,17 +23,18 @@ public class UserService {
 	}
 	
 	// 회원가입
-	public void joinUser(UserDTO userDTO) throws ClassNotFoundException {
+	public boolean joinUser(UserDTO userDTO) throws ClassNotFoundException {
 		
 		try {
 			userDAO.joinUser(userDTO);
-			
+			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			// pk(id) 중복값이 있는 경우
 			System.out.println("존재하는 아이디 입니다. 다시 입력해주세요");
 		
 		}
+		return false;
 	
 	}
 	
@@ -60,10 +61,40 @@ public class UserService {
 	}
 	
 	// 로그인
-	public void logIn(String id, String pw) throws ClassNotFoundException, SQLException {
+	public String logIn(String id, String pw) throws ClassNotFoundException, SQLException {
 		
-		userDAO.logIn(id, pw);
+		return userDAO.logIn(id, pw);
 	}
 	
+	
+	// 비밀번호 변경
+	public boolean pwChange(String id, String pw, String new_pw) {
+		
+		try {
+			if (userDAO.pwChange(id, pw, new_pw)) {
+				return true;
+			}
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+		
+	}
+	
+	// 회원 탈퇴
+	public boolean userDelete(String id, String pw) {
+
+		try {
+			if (userDAO.userDelete(id, pw)) {
+				return true;
+			}
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+		
+	}
 
 }

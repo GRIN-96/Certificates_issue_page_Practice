@@ -23,7 +23,7 @@ public class UserDAO {
 	String dbURL = "jdbc:mariadb://localhost:3306/pdf";
 	String dbID = "root";
 	String dbPassword = "root";
-	HttpSession session = null;
+	HttpSession session;
 	
 	public UserDAO(){}
 	
@@ -40,7 +40,8 @@ public class UserDAO {
 			// 쿼리 내 입력값 할당
 			pstmt = con.prepareStatement(SQL);  // 쿼리문 적용
 			pstmt.setString(1, userDTO.getUser_id());
-			pstmt.setString(2, BCrypt.hashpw(userDTO.getUser_pw(), BCrypt.gensalt(10)));  // DEFAULT VALUE - 10
+			// 회원마다 salt(byte단위 임의의 문자열)를 생성하고, hashPW를 생성하여 저장.
+			pstmt.setString(2, BCrypt.hashpw(userDTO.getUser_pw(), BCrypt.gensalt(10)));  // DEFAULT VALUE - 10 
 			pstmt.setString(3, userDTO.getUser_name());
 			pstmt.setString(4, new SimpleDateFormat("yyyy-MM-dd").format(userDTO.getUser_birthday()));
 			pstmt.setString(5, userDTO.getUser_gender());
@@ -127,7 +128,37 @@ public class UserDAO {
 		
 	}
 	// 로그인 서비스
-	public void logIn(String id, String pw) throws ClassNotFoundException, SQLException {
+	public String logIn(String id, String pw) throws ClassNotFoundException, SQLException {
+		
+		Class.forName("org.mariadb.jdbc.Driver");  // JDBC Driver 클래스를 로드하기 위해 사용됩니다. = jdbc 접근을 도와줍니다.
+		con = DriverManager.getConnection(dbURL, dbID, dbPassword);  // DB에 연결
+		
+		// SQL QUERY 작성  = 아이디 찾기
+		String SQL = "SELECT * FROM user WHERE user_id = ?";
+		
+		pstmt = con.prepareStatement(SQL); 
+		pstmt.setString(1, id);
+		
+		rs = pstmt.executeQuery(); // 모든 정보 담기
+		
+		String user_id = null;
+		
+		if (rs.next()) {
+			
+			// 암호화된 패스워드를 비교 
+			if (BCrypt.checkpw(pw, rs.getString("user_pw")))  {    // 로그인 성공
+				
+				user_id = rs.getString("user_id");
+				
+			}else {
+				user_id = null;
+			}
+		}
+		return user_id;
+	}
+	
+	// 비밀번호 변경
+	public boolean pwChange(String id, String pw, String new_pw) throws ClassNotFoundException, SQLException {
 		
 		Class.forName("org.mariadb.jdbc.Driver");  // JDBC Driver 클래스를 로드하기 위해 사용됩니다. = jdbc 접근을 도와줍니다.
 		con = DriverManager.getConnection(dbURL, dbID, dbPassword);  // DB에 연결
@@ -142,14 +173,69 @@ public class UserDAO {
 		
 		if (rs.next()) {
 			
-			if (BCrypt.checkpw(pw, rs.getString("user_pw")));  {  // 암호화된 패스워드를 비교
+			// 암호화된 패스워드를 비교 
+			if (BCrypt.checkpw(pw, rs.getString("user_pw")));  {    // 계정 일치 확인
 				
-				// 세션 생성 => 현재 사이트에서 어디에서든 읽을 수 있는 변수 (db메모리사용)
-				session.setAttribute("id", rs.getString("user_id"));
-									// 변수명            // DB필드명
+				
+				// SQL QUERY 작성  = 비밀번호 변경 ( UPDATE )
+				String SQL2 = "UPDATE user SET user_pw = ? WHERE user_id = ?";
+				
+				pstmt = con.prepareStatement(SQL2); 
+				
+				pstmt.setString(1, BCrypt.hashpw(new_pw, BCrypt.gensalt(10)));
+				pstmt.setString(2, id);
+				
+				// compile된 DML문을 실행시켜 성공적으로 수행될 경우 1, 실패의 경우 0을 반환합니다.
+				int result = pstmt.executeUpdate(); 
+				if (result == 1) {
+					return true;
+				}
 				
 			}
+		
 		}
+		return false;
+		
+	}
+	
+	// 회원탈퇴
+	public boolean userDelete(String id, String pw) throws SQLException, ClassNotFoundException {
+		
+		Class.forName("org.mariadb.jdbc.Driver");  // JDBC Driver 클래스를 로드하기 위해 사용됩니다. = jdbc 접근을 도와줍니다.
+		con = DriverManager.getConnection(dbURL, dbID, dbPassword);  // DB에 연결
+		
+		// SQL QUERY 작성  = 아이디 찾기
+		String SQL = "SELECT * FROM user WHERE user_id = ?";
+		
+		pstmt = con.prepareStatement(SQL); 
+		pstmt.setString(1, id);
+		
+		rs = pstmt.executeQuery(); // 모든 정보 담기
+		
+		if (rs.next()) {
+			
+			// 암호화된 패스워드를 비교 
+			if (BCrypt.checkpw(pw, rs.getString("user_pw")))  {    // 계정 일치 확인
+				
+				
+				// SQL QUERY 작성  = 비밀번호 변경 ( UPDATE )
+				String SQL2 = "DELETE FROM user where user_id = ?";
+				
+				pstmt = con.prepareStatement(SQL2); 
+				
+				pstmt.setString(1, id);
+				
+				// compile된 DML문을 실행시켜 성공적으로 수행될 경우 1, 실패의 경우 0을 반환합니다.
+				int result = pstmt.executeUpdate(); 
+				if (result == 1) {
+					return true;
+				}
+			}else {
+				return false;
+			}
+		
+		}
+		return false;
 	}
 	
 }
