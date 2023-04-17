@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import DTO.BoardDTO;
 import service.BoardService;
@@ -34,26 +35,138 @@ public class BoardController extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		
+		// 한글 인코딩
+		request.setCharacterEncoding("UTF-8"); 
+		
 		String action = request.getParameter("action");
 		
 		if (action.equals("home")) {
+			
+			// page start
+			int page = 1; // 처음엔 무조건 1페이지 실행
+			int limit = 5; // 한 페이지에 보이는 최대 게시글 수 
+			
+			// 값이 넘어오면 null이 아니고, 입력값이 없으면 null -> 처음 정해준 page값 적용.
+			if (request.getParameter("page") != null) {
+				page = Integer.parseInt(request.getParameter("page")); 
+			}
 			
 			ArrayList<BoardDTO> lists = new ArrayList<BoardDTO>();
 			
 			lists = boardService.boardDatas();
 			
 			request.setAttribute("lists", lists);
-			request.setAttribute("lists_size", lists.size());
 			
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/view/managerPage.jsp");  // jsp 매핑
 			dispatcher.forward(request, response);  // 위 페이지로 제어 전달.
 			
 		}
+		// board 상세 페이지
+		else if (action.equals("detail")) {
+			
+			String agency = request.getParameter("agency");
+			String education = request.getParameter("education");
+			BoardDTO boardDTO = new BoardDTO();
+			
+			boardDTO = boardService.detailBoard(agency, education);
+			
+			request.setAttribute("board", boardDTO);
+			
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/view/detailview.jsp");  // jsp 매핑
+			dispatcher.forward(request, response);  // 위 페이지로 제어 전달.
+			
+		}
+		// 수정페이지
+		else if (action.equals("edit")) {
+			
+			String agency = request.getParameter("agency");
+			String education = request.getParameter("education");
+			BoardDTO boardDTO = new BoardDTO();
+			
+			boardDTO = boardService.detailBoard(agency, education);
+			
+			request.setAttribute("board", boardDTO);
+			
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/view/editboard.jsp");  // jsp 매핑
+			dispatcher.forward(request, response);  // 위 페이지로 제어 전달.
+			
+		}
 		
+		// 삭제 페이지
+		else if (action.equals("delete")) {
+			
+			String id = request.getParameter("id");
+			long board_id = Long.parseLong(id);  
+			
+			if (boardService.delete(board_id)) {
+				
+				// 추가에 성공하면 페이지이동
+				response.sendRedirect("../Board/BoardController?action=home");
+				
+			}else {
+				// 실패 시 페이지 이동
+				System.out.println("board 삭제에 실패하였습니다. 다시시도해 주세요");
+				response.sendRedirect("../Board/view/failpage.jsp");
+			}
+			
+		}
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	
+		// 한글 인코딩
+		request.setCharacterEncoding("UTF-8"); 
+		
+		String action = request.getParameter("action");
+		String agency = request.getParameter("agency");
+		String education = request.getParameter("education");
+		String content = request.getParameter("content");
+		String position = request.getParameter("position");
+		String issurer = request.getParameter("issurer");
+		HttpSession session = request.getSession();
+		
+		if (action.equals("new_board")) {
+			
+			// insert를 위해 boardDTO 객체 생성
+			BoardDTO boardDTO = new BoardDTO(agency, education, content, position, issurer);
+			
+			if (boardService.boardInsert(boardDTO)) {
+				
+				// 추가에 성공하면 페이지이동
+				response.sendRedirect("../Board/BoardController?action=home");
+				
+			}else {
+				
+				// 실패 시 페이지 이동
+				System.out.println("board 추가에 실패하였습니다. 다시시도해 주세요");
+				response.sendRedirect("../Board/view/failpage.jsp");
+				
+			}
+			
+		}
+		
+		// 수정하기
+		else if ( action.equals("edit_board") ) {
+			
+			String id = request.getParameter("id");
+			long board_id = Long.parseLong(id); 
+			
+			// insert를 위해 boardDTO 객체 생성
+			BoardDTO boardDTO = new BoardDTO(board_id, agency, education, content, position, issurer);
+			
+			if (boardService.boardUpdate(boardDTO)) {
+				
+				// 수정에 성공하면 페이지이동
+				response.sendRedirect("../Board/BoardController?action=home");
+				
+			}else {
+				// 실패 시 페이지 이동
+				System.out.println("board 수정에 실패하였습니다. 다시시도해 주세요");
+				response.sendRedirect("../Board/view/failpage.jsp");
+			}
+		}
+		
 	}
 
 }
