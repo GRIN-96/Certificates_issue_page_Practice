@@ -40,6 +40,7 @@
 		form.id = numForms ; // id 속성 값 설정
 		form.classList.add("form-container"); // 클래스 name 지정
 		
+		
 		// 입력 필드 추가
 		var input1 = document.createElement("input");
 		input1.setAttribute("type", "text");
