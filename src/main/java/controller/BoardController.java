@@ -78,6 +78,18 @@ public class BoardController extends HttpServlet {
 			dispatcher.forward(request, response);  // 위 페이지로 제어 전달.
 			
 		}
+		
+		// complete table insert
+		else if (action.equals("insert_complete")) {
+			String id = request.getParameter("id");
+			long board_id = Long.parseLong(id); 
+			
+			request.setAttribute("board_id", board_id);
+			
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/view/insertcomplete.jsp");  // jsp 매핑
+			dispatcher.forward(request, response);  // 위 페이지로 제어 전달.
+		}
+		
 		// 수정페이지
 		else if (action.equals("edit")) {
 			

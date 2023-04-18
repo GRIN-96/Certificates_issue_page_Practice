@@ -8,6 +8,7 @@
 <title>BOARD DETAIL</title>
 </head>
 <% BoardDTO board = (BoardDTO) request.getAttribute("board"); %>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <style>
 	.boardtable {
 		border : 1px solid black;
@@ -56,7 +57,9 @@
 	</div>
 	<br/><br/>
 	<div>
-		<input type="button" value="이수자 목록 등록하기" href="#"> &nbsp
+		<input type="button" value="이수자 목록 등록하기" onClick="location.href='BoardController?action=insert_complete&id=<%= board.getBoard_id() %>'"> &nbsp
 	</div>
+	 
+	
 </body>
 </html>
