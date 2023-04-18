@@ -25,8 +25,27 @@ public class BoardDAO {
 	HttpSession session;
 	
 	public BoardDAO(){}
+	
+	// 게시글 갯수 return
+	public int getListCount() throws ClassNotFoundException, SQLException {
 		
-	public ArrayList<BoardDTO> boardDatas() throws SQLException, ClassNotFoundException {
+		int x = 0; // 전체 글 개수를 담을 변수 선언
+		
+		Class.forName("org.mariadb.jdbc.Driver");  // JDBC Driver 클래스를 로드하기 위해 사용됩니다. = jdbc 접근을 도와줍니다.
+		con = DriverManager.getConnection(dbURL, dbID, dbPassword);  // DB에 연결
+		String SQL = "SELECT COUNT(*) FROM board";
+		
+		pstmt = con.prepareStatement(SQL); 
+		
+		rs = pstmt.executeQuery(); // 모든 정보 담기
+		
+		if(rs.next()) {
+			x = rs.getInt(1);
+		} 
+		return x;
+	}
+		
+	public ArrayList<BoardDTO> getBoardList(int page, int limit) throws SQLException, ClassNotFoundException {
 		
 		ArrayList<BoardDTO> lists = new ArrayList<BoardDTO>();
 		
@@ -34,9 +53,12 @@ public class BoardDAO {
 		con = DriverManager.getConnection(dbURL, dbID, dbPassword);  // DB에 연결
 		
 		// SQL QUERY 작성  = 아이디 찾기
-		String SQL = "SELECT * FROM board ORDER BY board_id DESC";
+		String SQL = "SELECT * FROM board ORDER BY board_id DESC LIMIT ?,?";
 		
 		pstmt = con.prepareStatement(SQL); 
+		
+		pstmt.setInt(1, page-1);
+		pstmt.setInt(2, limit);
 		
 		rs = pstmt.executeQuery(); // 모든 정보 담기
 		
@@ -168,6 +190,74 @@ public class BoardDAO {
 		}else {
 		return false;
 		}
+	}
+	
+	// search board - Agency
+	public ArrayList<BoardDTO> searchAgency(String search, int page, int limit) throws ClassNotFoundException, SQLException {
+		ArrayList<BoardDTO> lists = new ArrayList<BoardDTO>();
+		
+		Class.forName("org.mariadb.jdbc.Driver");  // JDBC Driver 클래스를 로드하기 위해 사용됩니다. = jdbc 접근을 도와줍니다.
+		con = DriverManager.getConnection(dbURL, dbID, dbPassword);  // DB에 연결
+		
+		// SQL QUERY 작성  = 아이디 찾기
+		String SQL = "SELECT * FROM board WHERE agency = ? ORDER BY board_id DESC LIMIT ?,?";
+		
+		pstmt = con.prepareStatement(SQL); 
+		
+		pstmt.setString(1, search);
+		pstmt.setInt(2, page-1);
+		pstmt.setInt(3, limit);
+		
+		rs = pstmt.executeQuery(); // 모든 정보 담기
+		
+		while (rs.next()) {
+			
+			BoardDTO boardDTO = new BoardDTO(
+					rs.getLong("board_id"),
+					rs.getString("agency"),
+					rs.getString("education"),
+					rs.getString("content"),
+					rs.getString("position"),
+					rs.getString("issurer"));
+			
+			lists.add(boardDTO);  // 객체 생성 후 리스트추가
+		}
+		
+		return lists;
+	}
+	
+	// search board - Education
+	public ArrayList<BoardDTO> searchEducation(String search, int page, int limit) throws ClassNotFoundException, SQLException {
+		ArrayList<BoardDTO> lists = new ArrayList<BoardDTO>();
+		
+		Class.forName("org.mariadb.jdbc.Driver");  // JDBC Driver 클래스를 로드하기 위해 사용됩니다. = jdbc 접근을 도와줍니다.
+		con = DriverManager.getConnection(dbURL, dbID, dbPassword);  // DB에 연결
+		
+		// SQL QUERY 작성  = 아이디 찾기
+		String SQL = "SELECT * FROM board WHERE education = ? ORDER BY board_id DESC LIMIT ?,?";
+		
+		pstmt = con.prepareStatement(SQL); 
+		
+		pstmt.setString(1, search);
+		pstmt.setInt(2, page-1);
+		pstmt.setInt(3, limit);
+		
+		rs = pstmt.executeQuery(); // 모든 정보 담기
+		
+		while (rs.next()) {
+			
+			BoardDTO boardDTO = new BoardDTO(
+					rs.getLong("board_id"),
+					rs.getString("agency"),
+					rs.getString("education"),
+					rs.getString("content"),
+					rs.getString("position"),
+					rs.getString("issurer"));
+			
+			lists.add(boardDTO);  // 객체 생성 후 리스트추가
+		}
+		
+		return lists;
 	}
 	
 }

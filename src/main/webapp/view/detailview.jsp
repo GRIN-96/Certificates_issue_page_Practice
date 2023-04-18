@@ -54,5 +54,9 @@
 		<input type="button" value="수정하기" onClick="location.href='BoardController?action=edit&agency=<%= board.getAgency() %>&education=<%= board.getEducation() %>'"> &nbsp
 		<input type="button" value="삭제하기" onClick="location.href='BoardController?action=delete&id=<%= board.getBoard_id() %>'"> <br/>
 	</div>
+	<br/><br/>
+	<div>
+		<input type="button" value="이수자 목록 등록하기" href="#"> &nbsp
+	</div>
 </body>
 </html>

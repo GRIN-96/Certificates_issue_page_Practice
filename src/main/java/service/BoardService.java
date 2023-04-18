@@ -19,13 +19,23 @@ public class BoardService {
 		return instance;
 	}
 	
+	public int getListCount() {
+		int x = 0;
+		try {
+			x = boardDAO.getListCount();
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}
+		return x;
+	}
+	
 	// 모든 board 객체 반환 
-	public ArrayList<BoardDTO> boardDatas() {
+	public ArrayList<BoardDTO> getBoardList(int page, int limit) {
 		
 		ArrayList<BoardDTO> lists = new ArrayList<BoardDTO>();
 		
 		try {
-			lists = boardDAO.boardDatas();
+			lists = boardDAO.getBoardList(page, limit);
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}
@@ -88,6 +98,34 @@ public class BoardService {
 			e.printStackTrace();
 		}
 		return false;
+	}
+	
+	// board serch - agency
+	public ArrayList<BoardDTO> searchAgency(String search, int page, int limit) {
+		ArrayList<BoardDTO> list = new ArrayList<BoardDTO>();
+		
+		try {
+			list = boardDAO.searchAgency(search, page, limit);
+			return list;
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+	
+	// board serch - education
+	public ArrayList<BoardDTO> searchEducation(String search, int page, int limit) {
+		ArrayList<BoardDTO> list = new ArrayList<BoardDTO>();
+		
+		try {
+			list = boardDAO.searchEducation(search, page, limit);
+			return list;
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return list;
 	}
 	
 }

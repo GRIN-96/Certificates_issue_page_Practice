@@ -54,9 +54,10 @@ public class BoardController extends HttpServlet {
 			
 			ArrayList<BoardDTO> lists = new ArrayList<BoardDTO>();
 			
-			lists = boardService.boardDatas();
+			lists = boardService.getBoardList(page, limit);
 			
 			request.setAttribute("lists", lists);
+			request.setAttribute("page", page);
 			
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/view/managerPage.jsp");  // jsp 매핑
 			dispatcher.forward(request, response);  // 위 페이지로 제어 전달.
@@ -165,6 +166,39 @@ public class BoardController extends HttpServlet {
 				System.out.println("board 수정에 실패하였습니다. 다시시도해 주세요");
 				response.sendRedirect("../Board/view/failpage.jsp");
 			}
+		}
+		
+		// 검색기능
+		else if ( action.equals("search") ) {
+			
+			String search = request.getParameter("search");
+			String searchbar = request.getParameter("searchbar");
+			
+			// page start
+			int page = 1; // 처음엔 무조건 1페이지 실행
+			int limit = 5; // 한 페이지에 보이는 최대 게시글 수 
+			
+			// 값이 넘어오면 null이 아니고, 입력값이 없으면 null -> 처음 정해준 page값 적용.
+			if (request.getParameter("page") != null) {
+				page = Integer.parseInt(request.getParameter("page")); 
+			}
+			
+			ArrayList<BoardDTO> lists = new ArrayList<BoardDTO>();
+			
+			request.setAttribute("page", page);
+			
+			if (search.equals("agency")) {
+				lists = boardService.searchAgency(searchbar, page, limit);
+				request.setAttribute("lists", lists);
+			}
+			else if (search.equals("education")) {
+				lists = boardService.searchEducation(searchbar, page, limit);
+				request.setAttribute("lists", lists);
+			}
+			
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/view/managerPage.jsp");  // jsp 매핑
+			dispatcher.forward(request, response);  // 위 페이지로 제어 전달.
+			
 		}
 		
 	}
