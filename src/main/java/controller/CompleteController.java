@@ -25,12 +25,8 @@ public class CompleteController extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	
-		String action = request.getParameter("action");
+		System.out.println("하이하이");
 		
-		if (action.equals("test")) {
-			System.out.println("하이하이");
-		}
-	
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
