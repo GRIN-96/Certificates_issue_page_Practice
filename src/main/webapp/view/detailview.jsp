@@ -59,7 +59,41 @@
 	<div>
 		<input type="button" value="이수자 목록 등록하기" onClick="location.href='BoardController?action=insert_complete&id=<%= board.getBoard_id() %>'"> &nbsp
 	</div>
-	 
+	 <div id="form-container"></div>
+<button onclick="submitForms()">Submit Forms</button>
+
+<script>
+function submitForms() {
+  var formContainer = document.getElementById("form-container");
+  var forms = formContainer.getElementsByTagName("form");
+
+  var formData = new FormData();
+
+  for (var i = 0; i < forms.length; i++) {
+    var form = forms[i];
+    var formElements = form.elements;
+
+    for (var j = 0; j < formElements.length; j++) {
+      var element = formElements[j];
+      var name = element.getAttribute("name");
+      var value = element.value;
+
+      formData.append(name, value);
+    }
+  }
+
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", "/submit.php");
+  xhr.onload = function() {
+    if (xhr.status === 200) {
+      console.log(xhr.response);
+    } else {
+      console.error(xhr.statusText);
+    }
+  };
+  xhr.send(formData);
+}
+</script>
 	
 </body>
 </html>
