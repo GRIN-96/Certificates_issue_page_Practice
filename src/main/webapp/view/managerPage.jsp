@@ -80,10 +80,10 @@
 	<div>
 		<table class="boardtable">
 				<tr>
-					<th>agency</th>
-					<th>education</th>
-					<th>position</th>
-					<th>issurer</th>
+					<th>기관명</th>
+					<th>교육과정</th>
+					<th>직책</th>
+					<th>발급자</th>
 				</tr>
 				<%
 					for (int i=0; i<lists.size(); i++) {

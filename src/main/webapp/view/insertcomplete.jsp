@@ -22,23 +22,41 @@
 	.remove-button {
 		margin-top: 10px;
 	}
+	.submit-button {
+		margin-bottom: 30px;
+	}
 </style>
 <body>
+	<a href="/Board/CompleteController?action=test"> 이도오옹 </a>
 	<button onclick="createForm()">FORM 생성</button>
-	<button onclick="submitForms()">FORM DATA 전달</button>
-	<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 	<div id = "form-containers" >
+	<form action="/Board/CompleteController?action=test1" method="post">
+		<input type="text" name="id" placeholder="회원 아이디" id="0" class="form-field">
+		<select name="result" id="0" class="form-field">
+			<option value="none">== 합격 / 불합격 ==</option>
+			<option value="P">합격</option>
+			<option value="F">불합격</option>
+		</select>
+		<input type="date" name="issue_date" id="0" class="form-field"/>
+		<button class="submit-button" id="0">FORM 제출하기</button>
+	</form>
 	<script>
-	
-		var formContainer = document.getElementById("form-containers");
 	
 		let numForms = 0; // 생성된 form 요소의 개수
 		
 		var form = document.createElement("form"); // 새로운 FORM 요소 생성
-		form.setAttribute("method", "post"); // 전송 방식 설정
-		form.setAttribute("action", "CompleteController?action=test")
+		form.setAttribute("action", "/Board/CompleteController?action=test")
+		form.setAttribute("method", "post");  // 전송 방식 설정
 		form.id = numForms ; // id 속성 값 설정
 		form.classList.add("form-container"); // 클래스 name 지정
+		
+		
+		// 버튼 추가
+		var button2 = document.createElement("button");
+		button2.textContent = "FORM 제출하기";
+		button2.classList.add("submit-button"); // 클래스 name 지정
+		button2.id = numForms; // id 속성 값 설정
+		form.appendChild(button2);
 		
 		
 		// 입력 필드 추가
@@ -89,14 +107,11 @@
 		button.textContent = "제거";
 		button.classList.add("remove-button"); // 클래스 name 지정
 		button.id = numForms; // id 속성 값 설정
-		button.classList.add("remove-button");  // 클래스 name 지정
-		
 		button.onclick = function() {
 			removeForm(this);
 		};
 		form.appendChild(button);
-		document.getElementById("form-containers").appendChild(form); // DIV에 FORM 추가
-		
+		document.body.appendChild(form); // body에 FORM 추가
 		
 		
 		
@@ -105,14 +120,6 @@
 			
 		
 			numForms++; // 생성된 form 요소 개수 증가
-			
-			
-			// form 생성
-			var form = document.createElement("form"); // 새로운 FORM 요소 생성
-			form.setAttribute("method", "post"); // 전송 방식 설정
-			form.setAttribute("action", "CompleteController?action=test")
-			form.id = numForms ; // id 속성 값 설정
-			form.classList.add("form-container"); // 클래스 name 지정
 			
 			// 입력 필드 추가
 			var input1 = document.createElement("input");
@@ -163,58 +170,22 @@
 			button.classList.add("remove-button"); // 클래스 name 지정
 			button.id = numForms; // id 속성 값 설정
 			button.onclick = function() {
-				removeForm(this);
+				removeForm(numForms);
 			}; 
 			form.appendChild(button);
-			document.getElementById("form-containers").appendChild(form); // DIV에 FORM 추가
 		}
 		
 		
-		
-		$(document).ready(function() {
-			$("#remove-button").click(function() { // 폼태그 제거 버튼이 클릭되었을 때 실행되는 함수입니다.
-				$("#myForm").remove(); // 폼태그를 제거합니다.
-			});
-		});
-		function removeForm(button) {
+		function removeForm(numForms) {
+			
+			var elementsToRemove = document.querySelectorAll("#"+numForms);
 			// 버튼이 속한 폼 컨테이너 제거
-			var form = button.parentNode;
-			form.parentNode.removeChild(form);;
+			for (var i = 0; i < elementsToRemove.length; i++) {
+			    var element = elementsToRemove[i];
+			    element.parentNode.removeChild(element);
+			  }
 		}
 		
-	</script>
-	
-	<script>
-	function submitForms() {
-	  var formContainer = document.getElementById("form-containers");
-	  var forms = formContainer.getElementsByTagName("form");  // form 태그 수
-	
-	  var formData = new FormData();
-	
-	  for (var i = 0; i < forms.length; i++) {
-	    var form = forms[i];
-	    var formElements = form.elements;
-	
-	    for (var j = 0; j < formElements.length; j++) {
-	      var element = formElements[j];
-	      var name = element.getAttribute("name");
-	      var value = element.value;
-	
-	      formData.append(name, value);
-	    }
-	  }
-	
-	  var xhr = new XMLHttpRequest();
-	  xhr.open("POST", "/Board/CompleteController?action=test");
-	  xhr.onload = function() {
-	    if (xhr.status === 200) {
-	      console.log(xhr.response);
-	    } else {
-	      console.error(xhr.statusText);
-	    }
-	  };
-	  xhr.send(formData);
-	}
 	</script>
 	<br/>
 	</div>
