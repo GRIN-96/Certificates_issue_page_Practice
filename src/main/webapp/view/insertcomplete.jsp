@@ -27,8 +27,8 @@
 	}
 </style>
 <body>
-	<a href="/Board/CompleteController?action=test"> 이도오옹 </a>
-	<button onclick="createForm()">FORM 생성</button>
+	<a href="/Board/CompleteController?action=a"> 이동 </a><br/>
+	<button onclick="createForm()">FORM 생성</button> 
 	<div id = "form-containers" >
 	<form action="/Board/CompleteController?action=test1" method="post">
 		<input type="text" name="id" placeholder="회원 아이디" id="0" class="form-field">

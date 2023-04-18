@@ -25,7 +25,15 @@ public class CompleteController extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	
-		System.out.println("하이하이");
+		// 한글 인코딩
+		request.setCharacterEncoding("UTF-8"); 
+		
+		String action = request.getParameter("action");
+		
+		if (action.equals("a")) {
+			
+			System.out.println("gdgd");
+		}
 		
 	}
 
