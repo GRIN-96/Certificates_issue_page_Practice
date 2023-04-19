@@ -13,6 +13,8 @@
 	<br/><br/>
 	<a href="/Board/view/userDelete.jsp">회원탈퇴</a> 
 	<br/><br/>
-	<a href="/Board/view/mypage.jsp">이수증발급</a>
+	<a href="/Board/CompleteController?action=myList">이수증발급</a>
+	<br/><br/>
+	<input type="button" value="홈으로이동" onClick="location.href='../view/home.jsp'"> 
 </body>
 </html>

@@ -150,7 +150,8 @@
 		
 	}
 	%>
-	<input type="button" value="추가하기" onClick="location.href='view/newboard.jsp'"> &nbsp
+	<input type="button" value="추가하기" onClick="location.href='view/newboard.jsp'"> &nbsp &nbsp
+	<input type="button" value="홈으로이동" onClick="location.href='view/home.jsp'"> 
 </body>
 </html>
 

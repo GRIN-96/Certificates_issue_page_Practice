@@ -15,5 +15,7 @@
 		<input type="text" name="new_pw" placeholder="새로운 패스워드 입력" /> <br/><br/> 
 		<button>변경</button>
 	</form><br/> 
+	<br/><br/>
+	<input type="button" value="홈으로이동" onClick="location.href='../view/home.jsp'"> 
 </body>
 </html>

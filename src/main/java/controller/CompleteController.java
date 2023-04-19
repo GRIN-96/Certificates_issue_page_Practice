@@ -12,8 +12,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import DTO.BoardDTO;
+import DTO.CertificatesDTO;
 import DTO.CompleteDTO;
 import DTO.UserListDTO;
 import service.BoardService;
@@ -94,6 +96,103 @@ public class CompleteController extends HttpServlet {
 				
 			}
 			
+			
+		}
+		// 마이페이지 내에 출력가능한 이수증 보기
+		else if (action.equals("myList")) {
+			
+			ArrayList<CertificatesDTO> mylist = new ArrayList<CertificatesDTO>();
+			HttpSession session = request.getSession();
+			
+			// 세션Id 값 가져오기
+		    String sId = (String) session.getAttribute("id"); 
+		    
+		    mylist = completeService.allMyList(sId);
+		    
+		    if (mylist != null) {
+		    	
+		    	request.setAttribute("mylist", mylist);
+		    	
+		    	RequestDispatcher dispatcher = request.getRequestDispatcher("/view/certificates.jsp");  // jsp 매핑
+				dispatcher.forward(request, response);  // 위 페이지로 제어 전달.
+		    	
+		    }
+		    
+		}
+		
+		// 이수증 보기
+		else if (action.equals("pdf_viewer")) {
+			
+			CertificatesDTO certificatesDTO = new CertificatesDTO();
+			HttpSession session = request.getSession();
+			String board_id = request.getParameter("board_id");
+		
+			
+			// 세션Id 값 가져오기
+		    String sId = (String) session.getAttribute("id"); 
+		    
+		    certificatesDTO = completeService.certificatesInfo(sId, board_id);
+		    
+		    if (certificatesDTO != null) {
+		    	
+		    	request.setAttribute("certificatesDTO", certificatesDTO);
+		    	
+		    	Date b_day = certificatesDTO.getUser_birthday();
+		    	Date i_day = certificatesDTO.getIssue_date();
+		    	
+		    	// 포멧 생성
+		    	SimpleDateFormat b_d = new SimpleDateFormat("yyyy년 MM월 dd일생");
+		    	SimpleDateFormat i_d = new SimpleDateFormat("yyyy년 MM월 dd일");
+		    	
+		    	String u_birthday = b_d.format(b_day);
+		    	String b_issue = i_d.format(i_day);
+		    	
+		    	request.setAttribute("u_birthday", u_birthday);
+		    	request.setAttribute("b_issue", b_issue);
+		    	
+		    	
+		    	RequestDispatcher dispatcher = request.getRequestDispatcher("/view/pdfviewer.jsp");  // jsp 매핑
+				dispatcher.forward(request, response);  // 위 페이지로 제어 전달.
+		    	
+		    }
+			
+		}
+		
+		// 이수증 만들기 
+		else if (action.equals("pdf")) {
+			
+			CertificatesDTO certificatesDTO = new CertificatesDTO();
+			HttpSession session = request.getSession();
+			String board_id = request.getParameter("board_id");
+		
+			
+			// 세션Id 값 가져오기
+		    String sId = (String) session.getAttribute("id"); 
+		    
+		    certificatesDTO = completeService.certificatesInfo(sId, board_id);
+		    
+		    if (certificatesDTO != null) {
+		    	
+		    	request.setAttribute("certificatesDTO", certificatesDTO);
+		    	
+		    	Date b_day = certificatesDTO.getUser_birthday();
+		    	Date i_day = certificatesDTO.getIssue_date();
+		    	
+		    	// 포멧 생성
+		    	SimpleDateFormat b_d = new SimpleDateFormat("yyyy년 MM월 dd일생");
+		    	SimpleDateFormat i_d = new SimpleDateFormat("yyyy년 MM월 dd일");
+		    	
+		    	String u_birthday = b_d.format(b_day);
+		    	String b_issue = i_d.format(i_day);
+		    	
+		    	request.setAttribute("u_birthday", u_birthday);
+		    	request.setAttribute("b_issue", b_issue);
+		    	
+		    	
+		    	RequestDispatcher dispatcher = request.getRequestDispatcher("/view/NewCertificates.jsp");  // jsp 매핑
+				dispatcher.forward(request, response);  // 위 페이지로 제어 전달.
+		    	
+		    }
 			
 		}
 		
@@ -187,7 +286,9 @@ public class CompleteController extends HttpServlet {
 			}
 			
 		}
+		
 	
 	}
+	
 
 }

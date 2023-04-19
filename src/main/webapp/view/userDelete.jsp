@@ -14,5 +14,7 @@
 		<input type="text" name="pw" placeholder="패스워드 입력" /> <br/><br/>
 		<button>탈퇴</button>
 	</form><br/> 
+	<br/><br/>
+	<input type="button" value="홈으로이동" onClick="location.href='../view/home.jsp'"> 
 </body>
 </html>

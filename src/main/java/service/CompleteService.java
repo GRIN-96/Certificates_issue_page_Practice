@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import DAO.CompleteDAO;
+import DTO.CertificatesDTO;
 import DTO.CompleteDTO;
 
 public class CompleteService {
@@ -49,6 +50,37 @@ public class CompleteService {
 		}
 		
 		return false;
+	}
+	
+	// 나의 발급가능한 이수증 리스트 불러오기
+	public ArrayList<CertificatesDTO> allMyList(String user_id) {
+		
+		ArrayList<CertificatesDTO> lists = new ArrayList<CertificatesDTO>();
+		
+		try {
+			lists = completeDAO.allMyList(user_id);
+			return lists;
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}
+				
+		return lists;
+	}
+	
+	// pdf 생성을 위한 이수증 가져오기
+	public CertificatesDTO certificatesInfo(String user_id, String board_id) {
+		
+		CertificatesDTO certificatesDTO = new CertificatesDTO();
+		
+		try {
+			certificatesDTO = completeDAO.certificatesInfo(user_id, board_id);
+			return certificatesDTO;
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return certificatesDTO;
+		
 	}
 	
 }
