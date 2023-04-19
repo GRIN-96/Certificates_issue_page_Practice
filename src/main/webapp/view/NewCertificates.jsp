@@ -110,13 +110,30 @@
 	</div>
 	
 	<script language = "javascript">
-	let doc = new jsPDF('p','pt','a4');
-	 
-	 
-	doc.addHTML(document.body,function() {
-	    doc.save('C:\DEV\spring\Board\src\main\webapp\pdfhtml.pdf');
+	// HTML 요소 캡처하여 PDF 생성
+	html2canvas(document.body).then(canvas => {
+	  var imgData = canvas.toDataURL('image/png');
+	  var pdf = new jsPDF();
+	  pdf.addImage(imgData, 'PNG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
+	  var pdfData = pdf.output('blob');
+
+	  // 새 페이지로 이동
+	  window.location.href = '/path/to/new/page.html';
+
+	  // 이후 페이지에서 PDF 뷰어에 표시
+	  var viewerUrl = '/path/to/pdfjs/web/viewer.html';
+	  var viewerIframe = document.createElement('iframe');
+	  viewerIframe.src = viewerUrl;
+	  viewerIframe.width = '100%';
+	  viewerIframe.height = '100%';
+	  document.body.appendChild(viewerIframe);
+
+	  // PDF 파일 로드 및 표시
+	  viewerIframe.onload = function() {
+	    var viewerWindow = viewerIframe.contentWindow;
+	    viewerWindow.PDFViewerApplication.open(pdfData);
+	  };
 	});
-	 
 	</script>
 	
 </body>
