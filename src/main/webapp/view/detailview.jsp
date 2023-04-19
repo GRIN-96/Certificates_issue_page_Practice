@@ -8,6 +8,7 @@
 <title>BOARD DETAIL</title>
 </head>
 <% BoardDTO board = (BoardDTO) request.getAttribute("board"); %>
+<% ArrayList<UserListDTO> userList = (ArrayList<UserListDTO>) request.getAttribute("userList"); %>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <style>
 	.boardtable {
@@ -51,13 +52,37 @@
 					<td><%= board.getIssurer() %></td>
 				</tr>
 		</table><br/>
-		<input type="button" value="목록으로" onclick="history.back();"> &nbsp
+		<input type="button" value="목록으로" onClick="location.href='BoardController?action=home'"> &nbsp
 		<input type="button" value="수정하기" onClick="location.href='BoardController?action=edit&agency=<%= board.getAgency() %>&education=<%= board.getEducation() %>'"> &nbsp
 		<input type="button" value="삭제하기" onClick="location.href='BoardController?action=delete&id=<%= board.getBoard_id() %>'"> <br/>
 	</div>
 	<br/><br/>
 	<div>
 		<input type="button" value="이수자 목록 등록하기" onClick="location.href='BoardController?action=insert_complete&id=<%= board.getBoard_id() %>'"> &nbsp
+	</div>
+	<br/><br/>
+	<div>
+		<table class="boardtable">
+				<tr>
+					<th>회원 아이디</th>
+					<th>성함</th>
+					<th>이수 여부</th>
+					<th>이수 날짜</th>
+				</tr>
+				<%
+					for (int i=0; i<userList.size(); i++) {
+				%>
+					<tr>
+						<td> <%= userList.get(i).getUser_id() %> </td>
+						<td> <%= userList.get(i).getUser_name() %> </td>
+						<td> <%= userList.get(i).getPass_fail() %> </td>
+						<td> <%= userList.get(i).getIssue_date() %> </td>
+						<td> <button onclick="location.href='/Board/CompleteController?action=delete&com_id=<%= userList.get(i).getComplete_id() %>&board_id=<%= board.getBoard_id() %>'">삭제</button> </td>
+					</tr>				
+				<%
+					}
+				%>
+		</table><br/>
 	</div>
 	
 </body>

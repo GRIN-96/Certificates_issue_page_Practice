@@ -4,7 +4,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import DAO.BoardDAO;
+import DAO.CompleteDAO;
 import DTO.BoardDTO;
+import DTO.UserListDTO;
 
 public class BoardService {
 
@@ -70,6 +72,22 @@ public class BoardService {
 		
 		
 	}
+	// board id search
+	public BoardDTO searchId( int board_id ) {
+		
+		BoardDTO boardDTO = new BoardDTO();
+		
+		try {
+			boardDTO = boardDAO.searchId(board_id);
+			
+			return boardDTO;
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return boardDTO;
+	}
+	
 	
 	// board Update
 	public boolean boardUpdate(BoardDTO boardDTO) {
@@ -127,5 +145,22 @@ public class BoardService {
 		
 		return list;
 	}
+	
+	// 해당 교육 이수자 목록 불러오기
+	public ArrayList<UserListDTO> userInfo(int board_id) {
+		
+		ArrayList<UserListDTO> lists = new ArrayList<UserListDTO>();
+		
+		try {
+			lists = boardDAO.userInfo( board_id );
+			
+			return lists;
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return lists;
+	}
+	
 	
 }

@@ -7,6 +7,7 @@
 <meta charset="UTF-8">
 <title>BOARD DETAIL</title>
 </head>
+<% String board_id = String.valueOf(request.getAttribute("board_id")); %>
 <style>
 	.form-container {
 		display: flex;
@@ -27,25 +28,15 @@
 	}
 </style>
 <body>
-	<a href="/Board/CompleteController?action=a"> 이동 </a><br/>
 	<button onclick="createForm()">FORM 생성</button> 
-	<div id = "form-containers" >
-	<form action="/Board/CompleteController?action=test1" method="post">
-		<input type="text" name="id" placeholder="회원 아이디" id="0" class="form-field">
-		<select name="result" id="0" class="form-field">
-			<option value="none">== 합격 / 불합격 ==</option>
-			<option value="P">합격</option>
-			<option value="F">불합격</option>
-		</select>
-		<input type="date" name="issue_date" id="0" class="form-field"/>
-		<button class="submit-button" id="0">FORM 제출하기</button>
-	</form>
 	<script>
+	
+		var board_id = <%= String.valueOf(request.getAttribute("board_id")) %>;
 	
 		let numForms = 0; // 생성된 form 요소의 개수
 		
 		var form = document.createElement("form"); // 새로운 FORM 요소 생성
-		form.setAttribute("action", "/Board/CompleteController?action=test")
+		form.setAttribute("action", "/Board/CompleteController?action=insert&id="+board_id);
 		form.setAttribute("method", "post");  // 전송 방식 설정
 		form.id = numForms ; // id 속성 값 설정
 		form.classList.add("form-container"); // 클래스 name 지정
@@ -62,7 +53,7 @@
 		// 입력 필드 추가
 		var input1 = document.createElement("input");
 		input1.setAttribute("type", "text");
-		input1.setAttribute("name", "id");
+		input1.setAttribute("name", "user_id");
 		input1.setAttribute("placeholder", "회원 아이디");
 		input1.id = numForms; // id 속성 값 설정
 		input1.classList.add("form-field"); // 클래스 name 지정
@@ -124,7 +115,7 @@
 			// 입력 필드 추가
 			var input1 = document.createElement("input");
 			input1.setAttribute("type", "text");
-			input1.setAttribute("name", "id");
+			input1.setAttribute("name", "user_id");
 			input1.setAttribute("placeholder", "회원 아이디");
 			input1.id = numForms; // id 속성 값 설정
 			input1.classList.add("form-field");  // 클래스 name 지정

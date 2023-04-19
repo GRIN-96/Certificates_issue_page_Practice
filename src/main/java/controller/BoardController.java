@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import DTO.BoardDTO;
+import DTO.UserListDTO;
 import service.BoardService;
 
 @WebServlet("/BoardController")
@@ -68,8 +69,26 @@ public class BoardController extends HttpServlet {
 			String agency = request.getParameter("agency");
 			String education = request.getParameter("education");
 			BoardDTO boardDTO = new BoardDTO();
+			ArrayList<UserListDTO> userList = new ArrayList<UserListDTO>();
 			
+			// board 정보 가져오기
 			boardDTO = boardService.detailBoard(agency, education);
+			
+			// long -> int 형변환
+			int board_id = boardDTO.getBoard_id().intValue();
+			
+			
+			if (boardDTO != null) {
+				
+				// 해당 교육의 이수자목록 가져오기.
+				userList = boardService.userInfo(board_id);
+				
+				if ( userList != null ) {
+					
+					request.setAttribute("userList", userList);
+					
+				}
+			}
 			
 			request.setAttribute("board", boardDTO);
 			

@@ -1,6 +1,11 @@
 package service;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
+
 import DAO.CompleteDAO;
+import DTO.CompleteDTO;
 
 public class CompleteService {
 
@@ -15,6 +20,35 @@ public class CompleteService {
 		return instance;
 	}
 	
-	//
+	// insert complete table
+	public boolean insertComplete(ArrayList<CompleteDTO> lists) {
+		
+		try {
+			if (completeDAO.insertComplete(lists)) {
+				return true;
+			}else {
+			return false;
+			}
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	// 이수자 정보 삭제하기
+	public boolean deleteCom(int complete_id) {
+		
+		try {
+			if (completeDAO.deleteCom(complete_id)) {
+				return true;
+			}else {
+				return false;
+			}
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
 	
 }

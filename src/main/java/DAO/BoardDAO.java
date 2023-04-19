@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 
 import DTO.BoardDTO;
 import DTO.UserDTO;
+import DTO.UserListDTO;
 
 public class BoardDAO {
 	
@@ -123,6 +124,41 @@ public class BoardDAO {
 		rs = pstmt.executeQuery(); // 모든 정보 담기
 		
 		while (rs.next()) {
+			
+			boardDTO = new BoardDTO(
+					rs.getLong("board_id"),
+					rs.getString("agency"),
+					rs.getString("education"),
+					rs.getString("content"),
+					rs.getString("position"),
+					rs.getString("issurer"));
+			
+		}
+		
+		return boardDTO;
+		
+	}
+	
+	// board 화면 되돌아가기
+	public BoardDTO searchId(int board_id) throws ClassNotFoundException, SQLException {
+		
+		Class.forName("org.mariadb.jdbc.Driver");  // JDBC Driver 클래스를 로드하기 위해 사용됩니다. = jdbc 접근을 도와줍니다.
+		con = DriverManager.getConnection(dbURL, dbID, dbPassword);  // DB에 연결
+		
+		// SQL QUERY 작성  = 아이디 찾기
+		String SQL = "SELECT * FROM BOARD WHERE board_id = ?";
+		
+		pstmt = con.prepareStatement(SQL); 
+		
+		pstmt.setInt(1, board_id);
+		
+		rs = pstmt.executeQuery(); // 모든 정보 담기
+		
+		BoardDTO boardDTO = new BoardDTO();
+		
+		
+		while (rs.next()) {
+			
 			
 			boardDTO = new BoardDTO(
 					rs.getLong("board_id"),
@@ -255,6 +291,38 @@ public class BoardDAO {
 					rs.getString("issurer"));
 			
 			lists.add(boardDTO);  // 객체 생성 후 리스트추가
+		}
+		
+		return lists;
+	}
+	
+	// 해당 교육 이수중인 학생리스트 가져오기
+	public ArrayList<UserListDTO> userInfo(int board_id) throws ClassNotFoundException, SQLException {
+		
+		ArrayList<UserListDTO> lists = new ArrayList<UserListDTO>();
+		
+		Class.forName("org.mariadb.jdbc.Driver");  // JDBC Driver 클래스를 로드하기 위해 사용됩니다. = jdbc 접근을 도와줍니다.
+		con = DriverManager.getConnection(dbURL, dbID, dbPassword);  // DB에 연결
+		
+		// SQL QUERY 작성  = 아이디 찾기
+		String SQL = "SELECT c.complete_id, u.user_id, u.user_name, c.pass_fail, c.issue_date FROM USER u INNER JOIN complete c ON u.user_id =  c.user_id WHERE c.board_id = ?";
+		
+		pstmt = con.prepareStatement(SQL); 
+		
+		pstmt.setInt(1, board_id);
+		
+		rs = pstmt.executeQuery(); // 모든 정보 담기
+		
+		while (rs.next()) {
+			
+			UserListDTO userListDTO = new UserListDTO(
+					rs.getInt("complete_id"),
+					rs.getString("user_id"),
+					rs.getString("user_name"),
+					rs.getString("pass_fail"),
+					rs.getDate("issue_date"));
+			
+			lists.add(userListDTO);  // 객체 생성 후 리스트추가
 		}
 		
 		return lists;

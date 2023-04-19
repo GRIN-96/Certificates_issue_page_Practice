@@ -7,27 +7,27 @@ public class CompleteDTO {
 	private Long complete_id;
 	private String user_id;
 	private int board_id;
-	private Date content;
+	private Date issue_date;
 	private String pass_fail;
 	
 	public CompleteDTO() {}
 	
 	
-	public CompleteDTO(Long complete_id, String user_id, int board_id, Date content, String pass_fail) {
+	public CompleteDTO(Long complete_id, String user_id, int board_id, Date issue_date, String pass_fail) {
 		
 		this.complete_id = complete_id;
 		this.user_id = user_id;
 		this.board_id = board_id;
-		this.content = content;
+		this.issue_date = issue_date;
 		this.pass_fail = pass_fail;
 		
 	}
 	
-	public CompleteDTO(String user_id, int board_id, Date content, String pass_fail) {
+	public CompleteDTO(String user_id, int board_id, Date issue_date, String pass_fail) {
 		
 		this.user_id = user_id;
 		this.board_id = board_id;
-		this.content = content;
+		this.issue_date = issue_date;
 		this.pass_fail = pass_fail;
 		
 	}
@@ -63,13 +63,13 @@ public class CompleteDTO {
 	}
 
 
-	public Date getContent() {
-		return content;
+	public Date getIssue_date() {
+		return issue_date;
 	}
 
 
-	public void setContent(Date content) {
-		this.content = content;
+	public void setIssue_date(Date issue_date) {
+		this.issue_date = issue_date;
 	}
 
 
@@ -86,7 +86,7 @@ public class CompleteDTO {
 	@Override
 	public String toString() {
 		return "CompleteDTO [complete_id=" + complete_id + ", user_id=" + user_id + ", board_id=" + board_id
-				+ ", content=" + content + ", pass_fail=" + pass_fail + "]";
+				+ ", issue_date=" + issue_date + ", pass_fail=" + pass_fail + "]";
 	}
 	
 	
