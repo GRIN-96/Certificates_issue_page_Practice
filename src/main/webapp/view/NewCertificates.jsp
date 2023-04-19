@@ -114,7 +114,7 @@
 	 
 	 
 	doc.addHTML(document.body,function() {
-	    doc.save('html.pdf');
+	    doc.save('C:\DEV\spring\Board\src\main\webapp\pdfhtml.pdf');
 	});
 	 
 	</script>

@@ -196,6 +196,12 @@ public class CompleteController extends HttpServlet {
 			
 		}
 		
+		else if (action.equals("pdfViewer")) {
+			
+			
+			
+		}
+		
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

@@ -12,8 +12,6 @@
 	<a href="/Board/BoardController?action=home">관리자페이지</a>  &nbsp
 	<a href="/Board/view/mypage.jsp">마이페이지로</a>
 	<br/><br/>
-	<% if ( request.getAttribute("id") != null ) {%>
-		<a href="/Board/UserController?action=logout">로그아웃</a>
-	<%	}%>
+	<a href="/Board/UserController?action=logout">로그아웃</a>
 </body>
 </html>
