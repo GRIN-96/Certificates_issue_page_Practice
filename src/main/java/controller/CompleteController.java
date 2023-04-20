@@ -296,42 +296,23 @@ public class CompleteController extends HttpServlet {
 		}
 		else if (action.equals("pdf_DL")) {
 			
-//			System.out.println("데이터 전달시도");
-//			
-//
-//	        // 파일 저장 경로 지정
-//	        String savePath = "/pdf/";
-//	        
-//	        // 폴더 없을 경우 생성 
-//	        File fileSaveDir = new File(savePath);
-//	        if (!fileSaveDir.exists()) {
-//	            fileSaveDir.mkdir();
-//	        }
-//	        
-//	        // Ajax로 넘어온 FormData 객체 생성	
-//	        Part filePart = request.getPart("pdf"); // input 태그의 name 속성값
-//	        String fileName = "html.pdf"; // 파일명 가져오기
-//	        InputStream fileContent = filePart.getInputStream(); // 파일 내용 가져오기
-//	        
-//	        // 서버에 저장할 파일 경로 생성
-//	        String filePath = savePath + fileName;
-//	        
-//	        // 파일 저장
-//	        Files.copy(fileContent, new File(filePath).toPath(), StandardCopyOption.REPLACE_EXISTING);
-//	        
-//	        // PDF 변환
-//	        convertHtmlToPdf(filePath);
-//	        
+			System.out.println("데이터 전달시도");
+			
+
+	        // 파일 저장 경로 지정
+	        String savePath = "/pdf/";
+	        
+	        // 폴더 없을 경우 생성 
+	        File fileSaveDir = new File(savePath);
+	        if (!fileSaveDir.exists()) {
+	            fileSaveDir.mkdir();
+	        }
+	        
+	        // Ajax로 넘어온 FormData 객체 생성	
+	        Blob image = null;
+	        
 	    }
 	}
-//	    private void convertHtmlToPdf(String filePath) {
-//	        // pdf.js 라이브러리 로드
-//	        String pdfJsPath = "pdfjs/web/viewer.html"; // pdf.js 파일이 위치한 경로
-//	        PdfConverter converter = new PdfConverter(pdfJsPath);
-//	        
-//	        // HTML 파일을 PDF로 변환하여 저장
-//	        converter.convertHtmlToPdf(filePath, filePath + ".pdf");
-//	    }
 		
 	}
 	
