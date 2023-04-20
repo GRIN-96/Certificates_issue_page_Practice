@@ -111,26 +111,28 @@
 	<div id="pdfContainer"></div>
 	<script>
 	
-	 let doc = new jsPDF('p','pt','a4');
-	    
-	   doc.addHTML(document.body,function() {
-	    
-	   var blob = doc.output('blob');
-
-       var formData = new FormData();
-       
-       formData.append('pdf', blob);
-
-       $.ajax('CompleteController?action=pdf_DL',{
-	           method: 'POST',
-	           data: formData,
-	           processData: false,
-	           contentType: false,
-	           success: function(data){console.log(data)},
-	           error: function(data){console.log(data)}
-	       });
-	   });
+	function saveAsPDF() {
+		  html2canvas(document.body).then(function(canvas) {
+		    var imgData = canvas.toDataURL('image/jpeg');
+		    var formData = new FormData();
+		    formData.append('imgData', imgData);
+		    $.ajax({
+		      type: 'POST',
+		      url: 'CompleteController?action=pdf_DL',
+		      data: formData,
+		      processData: false,
+		      contentType: false,
+		      success: function(response) {
+		        console.log('PDF file saved successfully!');
+		      },
+		      error: function(error) {
+		        console.log('Error saving PDF file:', error);
+		      }
+		    });
+		  });
+		}
 	
+	saveAsPDF(); // HTML이 열리자마자 함수 호출
   	</script>
 	
 </body>

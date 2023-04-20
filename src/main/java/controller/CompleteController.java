@@ -6,9 +6,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.UUID;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 
@@ -16,11 +19,27 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import javax.imageio.ImageIO;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.pdf.PdfWriter;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+import org.apache.fontbox.util.BoundingBox;
 
 import DTO.BoardDTO;
 import DTO.CertificatesDTO;
@@ -28,6 +47,8 @@ import DTO.CompleteDTO;
 import DTO.UserListDTO;
 import service.BoardService;
 import service.CompleteService;
+
+
 
 @WebServlet("/CompleteController")
 public class CompleteController extends HttpServlet {
@@ -298,20 +319,34 @@ public class CompleteController extends HttpServlet {
 			
 			System.out.println("데이터 전달시도");
 			
+			try {
+			      // 받은 FormData에서 이미지 데이터 추출
+			      InputStream inputStream = request.getPart("imgData").getInputStream();
+			      BufferedImage bufferedImage = ImageIO.read(inputStream);
 
-	        // 파일 저장 경로 지정
-	        String savePath = "/pdf/";
+			      // PDF 생성
+			      PDDocument document = new PDDocument();
+			      PDPage page = new PDPage(new PDRectangle(bufferedImage.getWidth(), bufferedImage.getHeight()));
+			      document.addPage(page);
+			      PDImageXObject imageXObject = LosslessFactory.createFromImage(document, bufferedImage);
+			      try (PDPageContentStream contents = new PDPageContentStream(document, page)) {
+			        contents.drawImage(imageXObject, 0, 0, bufferedImage.getWidth(), bufferedImage.getHeight());
+			      }
+
+			      // PDF 저장
+			      String fileName = "myFile.pdf";
+			      String filePath = getServletContext().getRealPath("pdfjs/web/" + fileName);
+			      document.save(new File(filePath));
+			      document.close();
+
+			      // 저장된 PDF 파일 경로 응답
+			      response.getWriter().write(filePath);
+			    } catch (Exception e) {
+			      e.printStackTrace();
+			      response.getWriter().write("Error saving PDF file: " + e.getMessage());
+			    }
 	        
-	        // 폴더 없을 경우 생성 
-	        File fileSaveDir = new File(savePath);
-	        if (!fileSaveDir.exists()) {
-	            fileSaveDir.mkdir();
-	        }
-	        
-	        // Ajax로 넘어온 FormData 객체 생성	
-	        Blob image = null;
-	        
-	    }
+		}
 	}
 		
 	}
