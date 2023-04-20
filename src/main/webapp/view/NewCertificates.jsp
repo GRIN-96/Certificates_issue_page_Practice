@@ -9,9 +9,10 @@
 <title>이수증 PDF 발급</title>
 </head>
 <% CertificatesDTO certificatesDTO = (CertificatesDTO) request.getAttribute("certificatesDTO"); %>
-
+<% String b_id = request.getParameter("board_id"); %>
+<% int board_id = Integer.parseInt(b_id); %>
 <style>
-	.certificates {
+	#certificates {
 		width : 600px;
 		height : 900px;
 		border : 1px solid black;
@@ -75,8 +76,7 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.0.272/jspdf.debug.js"></script>
-
-	<div class="certificates">
+	<div id="certificates">
 		<div class="agency">
 			<a><%= certificatesDTO.getAgency() %></a><br/>
 		</div>
@@ -108,33 +108,30 @@
 			<img class="image" style="height:100px; width:100px;" src="img/도장1.png"></img>
 		</div>
 	</div>
+	<div id="pdfContainer"></div>
+	<script>
 	
-	<script language = "javascript">
-	// HTML 요소 캡처하여 PDF 생성
-	html2canvas(document.body).then(canvas => {
-	  var imgData = canvas.toDataURL('image/png');
-	  var pdf = new jsPDF();
-	  pdf.addImage(imgData, 'PNG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
-	  var pdfData = pdf.output('blob');
+	 let doc = new jsPDF('p','pt','a4');
+	    
+	   doc.addHTML(document.body,function() {
+	    
+	   var blob = doc.output('blob');
 
-	  // 새 페이지로 이동
-	  window.location.href = '/path/to/new/page.html';
+       var formData = new FormData();
+       
+       formData.append('pdf', blob);
 
-	  // 이후 페이지에서 PDF 뷰어에 표시
-	  var viewerUrl = '/path/to/pdfjs/web/viewer.html';
-	  var viewerIframe = document.createElement('iframe');
-	  viewerIframe.src = viewerUrl;
-	  viewerIframe.width = '100%';
-	  viewerIframe.height = '100%';
-	  document.body.appendChild(viewerIframe);
-
-	  // PDF 파일 로드 및 표시
-	  viewerIframe.onload = function() {
-	    var viewerWindow = viewerIframe.contentWindow;
-	    viewerWindow.PDFViewerApplication.open(pdfData);
-	  };
-	});
-	</script>
+       $.ajax('CompleteController?action=pdf_DL',{
+	           method: 'POST',
+	           data: formData,
+	           processData: false,
+	           contentType: false,
+	           success: function(data){console.log(data)},
+	           error: function(data){console.log(data)}
+	       });
+	   });
+	
+  	</script>
 	
 </body>
 </html>

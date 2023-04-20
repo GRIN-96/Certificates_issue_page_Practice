@@ -1,18 +1,26 @@
 package controller;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.io.File;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
 import DTO.BoardDTO;
 import DTO.CertificatesDTO;
@@ -196,12 +204,6 @@ public class CompleteController extends HttpServlet {
 			
 		}
 		
-		else if (action.equals("pdfViewer")) {
-			
-			
-			
-		}
-		
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -209,17 +211,17 @@ public class CompleteController extends HttpServlet {
 		// 한글 인코딩
 		request.setCharacterEncoding("UTF-8"); 
 		
-		response.setCharacterEncoding("UTF-8"); 
-		
 		String action = request.getParameter("action");
 		
-		// id -> int로 형변환
-		String b_id = request.getParameter("id");
-		int board_id = Integer.parseInt(b_id);
+		
 		
 		if (action.equals("insert")) {
 			
 			System.out.println("파라미터 읽어오기");
+			
+			// id -> int로 형변환
+			String b_id = request.getParameter("id");
+			int board_id = Integer.parseInt(b_id);
 			
 			String[] user_id = request.getParameterValues("user_id");
 			String[] result = request.getParameterValues("result");
@@ -292,9 +294,46 @@ public class CompleteController extends HttpServlet {
 			}
 			
 		}
+		else if (action.equals("pdf_DL")) {
+			
+//			System.out.println("데이터 전달시도");
+//			
+//
+//	        // 파일 저장 경로 지정
+//	        String savePath = "/pdf/";
+//	        
+//	        // 폴더 없을 경우 생성 
+//	        File fileSaveDir = new File(savePath);
+//	        if (!fileSaveDir.exists()) {
+//	            fileSaveDir.mkdir();
+//	        }
+//	        
+//	        // Ajax로 넘어온 FormData 객체 생성	
+//	        Part filePart = request.getPart("pdf"); // input 태그의 name 속성값
+//	        String fileName = "html.pdf"; // 파일명 가져오기
+//	        InputStream fileContent = filePart.getInputStream(); // 파일 내용 가져오기
+//	        
+//	        // 서버에 저장할 파일 경로 생성
+//	        String filePath = savePath + fileName;
+//	        
+//	        // 파일 저장
+//	        Files.copy(fileContent, new File(filePath).toPath(), StandardCopyOption.REPLACE_EXISTING);
+//	        
+//	        // PDF 변환
+//	        convertHtmlToPdf(filePath);
+//	        
+	    }
+	}
+//	    private void convertHtmlToPdf(String filePath) {
+//	        // pdf.js 라이브러리 로드
+//	        String pdfJsPath = "pdfjs/web/viewer.html"; // pdf.js 파일이 위치한 경로
+//	        PdfConverter converter = new PdfConverter(pdfJsPath);
+//	        
+//	        // HTML 파일을 PDF로 변환하여 저장
+//	        converter.convertHtmlToPdf(filePath, filePath + ".pdf");
+//	    }
 		
-	
 	}
 	
 
-}
+
