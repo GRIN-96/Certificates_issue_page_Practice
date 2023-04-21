@@ -107,7 +107,7 @@ public class BoardDAO {
 	}
 	
 	// board 상세페이지
-	public BoardDTO detailBoard(String agency, String education) throws ClassNotFoundException, SQLException {
+	public BoardDTO detailBoard(int board_id) throws ClassNotFoundException, SQLException {
 		
 		BoardDTO boardDTO = new BoardDTO();
 		
@@ -115,11 +115,10 @@ public class BoardDAO {
 		con = DriverManager.getConnection(dbURL, dbID, dbPassword);  // DB에 연결
 		
 		// SQL QUERY 작성  = 아이디 찾기
-		String SQL = "SELECT * FROM BOARD WHERE agency = ? AND education = ? ";
+		String SQL = "SELECT * FROM BOARD WHERE board_id = ?";
 		
 		pstmt = con.prepareStatement(SQL); 
-		pstmt.setString(1, agency);
-		pstmt.setString(2, education);
+		pstmt.setInt(1, board_id);
 		
 		rs = pstmt.executeQuery(); // 모든 정보 담기
 		

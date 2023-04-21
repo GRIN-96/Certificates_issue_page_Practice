@@ -26,13 +26,11 @@ public class UserService {
 	public boolean joinUser(UserDTO userDTO) throws ClassNotFoundException {
 		
 		try {
-			userDAO.joinUser(userDTO);
-			return true;
+			if (userDAO.joinUser(userDTO)) {
+				return true;
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			// pk(id) 중복값이 있는 경우
-			System.out.println("존재하는 아이디 입니다. 다시 입력해주세요");
-		
 		}
 		return false;
 	

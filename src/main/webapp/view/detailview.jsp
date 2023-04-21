@@ -53,7 +53,7 @@
 				</tr>
 		</table><br/>
 		<input type="button" value="목록으로" onClick="location.href='BoardController?action=home'"> &nbsp
-		<input type="button" value="수정하기" onClick="location.href='BoardController?action=edit&agency=<%= board.getAgency() %>&education=<%= board.getEducation() %>'"> &nbsp
+		<input type="button" value="수정하기" onClick="location.href='BoardController?action=edit&board_id=<%= board.getBoard_id()%>'"> &nbsp
 		<input type="button" value="삭제하기" onClick="location.href='BoardController?action=delete&id=<%= board.getBoard_id() %>'"> <br/>
 	</div>
 	<br/><br/>

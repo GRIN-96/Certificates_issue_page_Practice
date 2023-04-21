@@ -1,13 +1,16 @@
 package controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -87,7 +90,7 @@ public class UserController extends HttpServlet {
 		
 		
 		// 회원가입
-		if (action.equals("join")) {   
+		if ("join".equals(action)) {   
 			
 			// String 값으로 받아온 birthday 변수를 Date type으로 변경해주는 작업입니다.
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -116,7 +119,9 @@ public class UserController extends HttpServlet {
 					
 				}else {
 					System.out.println("회원가입에 실패하였습니다. 다시시도해 주세요");
-					response.sendRedirect("../Board/view/failpage.jsp");
+					
+					alertAndGo(response, "이미 존재하는 아이디 입니다.", "/Board/view/joinpage.jsp");
+//					response.sendRedirect("../Board/view/failpage.jsp");
 				}
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
@@ -140,6 +145,18 @@ public class UserController extends HttpServlet {
 			String user_id = null;
 			try {
 				user_id = userService.userInfoId(name, b_day, email);
+				
+				if ( user_id != null ) {
+					
+					request.setAttribute("user_id", user_id);
+					
+					RequestDispatcher dispatcher = request.getRequestDispatcher("/view/inforesult.jsp");  // jsp 매핑
+					dispatcher.forward(request, response);  // 위 페이지로 제어 전달.
+				} else {
+					System.out.println("회원정보를 찾을 수 없습니다. 다시시도해 주세요");
+					response.sendRedirect("../Board/view/failpage.jsp");
+				}
+				
 			} catch (ClassNotFoundException | SQLException e) {
 				e.printStackTrace();
 			}
@@ -166,6 +183,9 @@ public class UserController extends HttpServlet {
 				if (user_id != null) {
 					System.out.println("회원인증이 완료되었습니다.");
 					response.sendRedirect("../Board/view/newpw.jsp");
+				}else {
+					System.out.println("회원정보를 찾을 수 없습니다. 다시시도해 주세요");
+					response.sendRedirect("../Board/view/failpage.jsp");
 				}
 			} catch (ClassNotFoundException | SQLException e) {
 				e.printStackTrace();
@@ -212,6 +232,7 @@ public class UserController extends HttpServlet {
 					System.out.println("로그인에 실패하였습니다. 다시시도해 주세요");
 					response.sendRedirect("../Board/view/failpage.jsp");
 				}
+				
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			} catch (SQLException e) {
@@ -253,6 +274,30 @@ public class UserController extends HttpServlet {
 			
 		}
 		
+	}
+	//알림창만 띄우고 이동 
+	public static void alertAndGo(HttpServletResponse response, String msg, String url) {
+	    try {
+			response.setContentType("text/html; charset=utf-8");
+			PrintWriter w = response.getWriter();
+			w.write("<script>alert('"+msg+"');location.href='"+url+"'</script>");
+			w.flush();
+			w.close();
+	    } catch(Exception e) {
+			e.printStackTrace();
+	    }
+	}
+	//알림창만 띄우기
+	public static void alert(HttpServletResponse response, String msg) {
+		try {
+			response.setContentType("text/html; charset=utf-8");
+			PrintWriter w = response.getWriter();
+			w.write("<script>alert('"+msg+"');</script>");
+			w.flush();
+			w.close();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

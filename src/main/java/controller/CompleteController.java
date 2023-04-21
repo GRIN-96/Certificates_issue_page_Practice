@@ -28,17 +28,13 @@ import javax.servlet.http.Part;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.Paragraph;
-import com.lowagie.text.pdf.PdfWriter;
-
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.apache.fontbox.util.BoundingBox;
 
 import DTO.BoardDTO;
@@ -315,37 +311,46 @@ public class CompleteController extends HttpServlet {
 			}
 			
 		}
-		else if (action.equals("pdf_DL")) {
+		else if ("pdf_DL".equals(action)) {
 			
-			System.out.println("데이터 전달시도");
+		  System.out.println("데이터 전달시도");
 			
-			try {
-			      // 받은 FormData에서 이미지 데이터 추출
-			      InputStream inputStream = request.getPart("imgData").getInputStream();
-			      BufferedImage bufferedImage = ImageIO.read(inputStream);
+		  // Stream -> 파일을 읽어온 후 outputStream을 통해 파일을 저장한다.
+		  InputStream inputStream = null;
+		  
+		  FileOutputStream outputStream = null;
+		  try {
+		    // pdf 파일 가져오기
+		    inputStream = request.getInputStream();
+		    String filePath = getServletContext().getRealPath("/pdf/test.pdf"); // Set file path as desired
+		    outputStream = new FileOutputStream(filePath);
+		    
 
-			      // PDF 생성
-			      PDDocument document = new PDDocument();
-			      PDPage page = new PDPage(new PDRectangle(bufferedImage.getWidth(), bufferedImage.getHeight()));
-			      document.addPage(page);
-			      PDImageXObject imageXObject = LosslessFactory.createFromImage(document, bufferedImage);
-			      try (PDPageContentStream contents = new PDPageContentStream(document, page)) {
-			        contents.drawImage(imageXObject, 0, 0, bufferedImage.getWidth(), bufferedImage.getHeight());
-			      }
+		    // 서버 내에 pdf 파일 다운로드. 
+		    byte[] buffer = new byte[1024];
+		    int length;
+		    while ((length = inputStream.read(buffer)) != -1) {
+		      outputStream.write(buffer, 0, length);
+		    }
+		    outputStream.flush();
 
-			      // PDF 저장
-			      String fileName = "myFile.pdf";
-			      String filePath = getServletContext().getRealPath("pdfjs/web/" + fileName);
-			      document.save(new File(filePath));
-			      document.close();
-
-			      // 저장된 PDF 파일 경로 응답
-			      response.getWriter().write(filePath);
-			    } catch (Exception e) {
-			      e.printStackTrace();
-			      response.getWriter().write("Error saving PDF file: " + e.getMessage());
-			    }
-	        
+		    // 성공 응답 출력
+		    response.getWriter().print("PDF saved successfully!");
+		  } catch (Exception ex) {
+		    // 에러 시 응답 출력
+		    response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		    response.getWriter().print(ex.getMessage());
+		  } finally {
+		    // Stream 종료.
+		    if (inputStream != null) {
+		      try {
+		        inputStream.close();
+		      } catch (IOException e) {
+		        e.printStackTrace();
+		
+		      }
+		    }
+		  }
 		}
 	}
 		

@@ -124,7 +124,7 @@ public class CompleteDAO {
 		Class.forName("org.mariadb.jdbc.Driver");  // JDBC Driver 클래스를 로드하기 위해 사용됩니다. = jdbc 접근을 도와줍니다.
 		con = DriverManager.getConnection(dbURL, dbID, dbPassword);  // DB에 연결
 		
-		// SQL QUERY 작성  = 아이디 찾기
+		// SQL QUERY 작성  = 아이디, 게시판 번호로 찾기.
 		String SQL = "SELECT c.complete_id, b.agency, b.education, u.user_name, c.issue_date, b.content, b.position, b.issurer, c.pass_fail, u.user_birthday FROM USER u INNER JOIN complete c INNER JOIN board b ON u.user_id =  c.user_id AND b.board_id  = c.board_id  WHERE c.user_id  = ? AND  c.complete_id  = ?";
 		
 		pstmt = con.prepareStatement(SQL); 

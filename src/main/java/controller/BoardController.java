@@ -66,19 +66,19 @@ public class BoardController extends HttpServlet {
 		// board 상세 페이지
 		else if (action.equals("detail")) {
 			
-			String agency = request.getParameter("agency");
-			String education = request.getParameter("education");
+			String id = request.getParameter("board_id");
+			int board_id = Integer.parseInt(id);
+			
 			BoardDTO boardDTO = new BoardDTO();
 			ArrayList<UserListDTO> userList = new ArrayList<UserListDTO>();
 			
 			// board 정보 가져오기
-			boardDTO = boardService.detailBoard(agency, education);
-			
-			// long -> int 형변환
-			int board_id = boardDTO.getBoard_id().intValue();
+			boardDTO = boardService.detailBoard(board_id);
 			
 			
 			if (boardDTO != null) {
+				
+				request.setAttribute("board", boardDTO);
 				
 				// 해당 교육의 이수자목록 가져오기.
 				userList = boardService.userInfo(board_id);
@@ -89,8 +89,6 @@ public class BoardController extends HttpServlet {
 					
 				}
 			}
-			
-			request.setAttribute("board", boardDTO);
 			
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/view/detailview.jsp");  // jsp 매핑
 			dispatcher.forward(request, response);  // 위 페이지로 제어 전달.
@@ -111,11 +109,12 @@ public class BoardController extends HttpServlet {
 		// 수정페이지
 		else if (action.equals("edit")) {
 			
-			String agency = request.getParameter("agency");
-			String education = request.getParameter("education");
+			String id = request.getParameter("board_id");
+			int board_id = Integer.parseInt(id);
+			
 			BoardDTO boardDTO = new BoardDTO();
 			
-			boardDTO = boardService.detailBoard(agency, education);
+			boardDTO = boardService.detailBoard(board_id);
 			
 			request.setAttribute("board", boardDTO);
 			
@@ -185,11 +184,12 @@ public class BoardController extends HttpServlet {
 			
 			// insert를 위해 boardDTO 객체 생성
 			BoardDTO boardDTO = new BoardDTO(board_id, agency, education, content, position, issurer);
+			// 생성자 함수보다 set함수 이용할 것
 			
 			if (boardService.boardUpdate(boardDTO)) {
 				
 				// 수정에 성공하면 페이지이동
-				response.sendRedirect("../Board/BoardController?action=home");
+				response.sendRedirect("../Board/BoardController?action=detail&board_id="+board_id);
 				
 			}else {
 				// 실패 시 페이지 이동

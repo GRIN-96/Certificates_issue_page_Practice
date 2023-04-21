@@ -58,12 +58,12 @@ public class BoardService {
 	}
 	
 	// board 상세페이지에 입력할 값 출력
-	public BoardDTO detailBoard(String agency, String education) {
+	public BoardDTO detailBoard(int board_id) {
 		
 		BoardDTO boardDTO = new BoardDTO();
 		
 		try {
-			boardDTO = boardDAO.detailBoard(agency, education);
+			boardDTO = boardDAO.detailBoard(board_id);
 			return boardDTO;
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();

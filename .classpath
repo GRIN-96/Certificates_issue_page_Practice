@@ -19,11 +19,11 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/org.eclipse.jst.server.tomcat.runtimeTarget/apache-tomcat-9.0.71"/>
-	<classpathentry kind="lib" path="C:/Users/user/OneDrive/바탕 화면/practice/Certificates_issue_page_Practice/src/main/webapp/WEB-INF/lib/mariadb-java-client-jre7-1.6.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/user/OneDrive/바탕 화면/practice/Certificates_issue_page_Practice/src/main/webapp/WEB-INF/lib/itextpdf-5.5.9.jar"/>
-	<classpathentry kind="lib" path="C:/Users/user/OneDrive/바탕 화면/practice/Certificates_issue_page_Practice/src/main/webapp/WEB-INF/lib/commons-io-2.11.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/user/OneDrive/바탕 화면/practice/Certificates_issue_page_Practice/src/main/webapp/WEB-INF/lib/com.lowagie.text-2.1.7.jar"/>
-	<classpathentry kind="lib" path="C:/Users/user/OneDrive/바탕 화면/practice/Certificates_issue_page_Practice/src/main/webapp/WEB-INF/lib/pdfbox-3.0.0-alpha3.jar"/>
-	<classpathentry kind="lib" path="C:/Users/user/OneDrive/바탕 화면/practice/Certificates_issue_page_Practice/src/main/webapp/WEB-INF/lib/fontbox-2.0.28.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/mariadb-java-client-jre7-1.6.1.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/pdfbox-3.0.0-alpha3.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/commons-io-2.11.0.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/fontbox-2.0.28.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/itextpdf-5.5.9.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/commons-logging-1.1.1.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
