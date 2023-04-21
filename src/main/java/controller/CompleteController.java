@@ -319,13 +319,15 @@ public class CompleteController extends HttpServlet {
 		  InputStream inputStream = null;
 		  
 		  FileOutputStream outputStream = null;
+		  System.out.println("gdgd1");
 		  try {
 		    // pdf 파일 가져오기
 		    inputStream = request.getInputStream();
-		    String filePath = getServletContext().getRealPath("/pdf/test.pdf"); // Set file path as desired
+		    System.out.println("gdgd2");
+		    String filePath = request.getSession().getServletContext().getRealPath("/pdf/test.pdf"); // Set file path as desired
 		    outputStream = new FileOutputStream(filePath);
 		    
-
+		    System.out.println("gdgd3");
 		    // 서버 내에 pdf 파일 다운로드. 
 		    byte[] buffer = new byte[1024];
 		    int length;
@@ -334,6 +336,7 @@ public class CompleteController extends HttpServlet {
 		    }
 		    outputStream.flush();
 
+		    System.out.println("gdgd4");
 		    // 성공 응답 출력
 		    response.getWriter().print("PDF saved successfully!");
 		  } catch (Exception ex) {

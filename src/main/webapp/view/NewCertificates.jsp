@@ -117,7 +117,6 @@
           // Create FormData object and append Blob object
           var formData = new FormData();
           formData.append('pdf', blob);
-          console.log(blob)
 
           // Send AJAX request to server
           $.ajax({
