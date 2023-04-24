@@ -2,6 +2,8 @@ package controller;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -13,7 +15,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
+import java.net.URL;
+import java.util.Base64;
+import java.util.Base64.Decoder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -24,6 +32,7 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
+import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -34,8 +43,11 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
-import org.apache.tomcat.util.codec.binary.Base64;
-import org.apache.fontbox.util.BoundingBox;
+
+import com.itextpdf.text.BadElementException;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.pdf.PdfWriter;
 
 import DTO.BoardDTO;
 import DTO.CertificatesDTO;
@@ -315,41 +327,35 @@ public class CompleteController extends HttpServlet {
 			
 		  System.out.println("데이터 전달시도");
 			
-		  // Stream -> 파일을 읽어온 후 outputStream을 통해 파일을 저장한다.
-		  InputStream inputStream = null;
+		  String imgurl = request.getParameter("imgurl");
 		  
-		  FileOutputStream outputStream = null;
-		  try {
-		    // pdf 파일 가져오기
-		    inputStream = request.getInputStream();
-		    String filePath = "/pdf/test.pdf"; // "파일경로/파일명"
-		    outputStream = new FileOutputStream(filePath, true);
-		    
-		    // 서버 내에 pdf 파일 다운로드. 
-		    byte[] buffer = new byte[1024];
-		    int length;
-		    while ((length = inputStream.read(buffer)) != -1) {
-		      outputStream.write(buffer, 0, length);
-		    }
-		    outputStream.flush();
+		  // Base64 디코딩
+		  byte[] imageBytes = Base64.getDecoder().decode(imgurl.split(",")[1]);
 
-		    // 성공 응답 출력
-		    response.getWriter().print("PDF saved successfully!");
-		  } catch (Exception ex) {
-		    // 에러 시 응답 출력
-		    response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		    response.getWriter().print(ex.getMessage());
-		  } finally {
-		    // Stream 종료.
-		    if (inputStream != null) {
-		      try {
-		        inputStream.close();
-		      } catch (IOException e) {
-		        e.printStackTrace();
-		
-		      }
-		    }
-		  }
+		  try (
+				  ByteArrayInputStream bais = new ByteArrayInputStream(imageBytes);
+				  ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+
+				  BufferedImage image = ImageIO.read(bais);
+
+				  Document document = new Document();
+				  PdfWriter.getInstance(document, baos);
+
+				  document.open();
+				  Image pdfImage = Image.getInstance(image, null);
+				  document.add(pdfImage);
+				  document.newPage();
+				  document.close();
+				  
+				  // 파일저장
+				  Files.write(Paths.get("/pdf/html.pdf"), baos.toByteArray(), StandardOpenOption.APPEND);
+
+				  // 응답메세지
+				  response.getWriter().write("PDF file saved successfully.");
+				} catch (Exception e) {
+				  e.printStackTrace();
+				}
+		  
 		}
 	}
 		

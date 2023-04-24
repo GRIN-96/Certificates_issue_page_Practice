@@ -34,6 +34,7 @@
 		border-collapse : collapse;
 		text-align : center;
 		height : 35px;
+		width : 100%;
 	}
 	th,td {
 		border : 1px solid black;
@@ -41,20 +42,14 @@
 	.pageBlock {
 		text-align: center;
 	}
+	.search{
+		text-align : center;
+	}
 </style>
 <body>
 	<h1> BOARD TABLE </h1>
-	<div>
-		<form action="/Board/BoardController?action=search" method="post">
-			<select name="search" >
-			    <option value="none">=== 검색 ===</option>
-			    <option value="agency">기관명</option>
-			    <option value="education">교육과정</option>
-			  </select> &nbsp
-			<input type="text" name="searchbar" placeholder="입력해주세요" /> &nbsp &nbsp
-			<button>검색하기</button>
-		</form><br/>
-	</div>
+	<input type="button" value="추가하기" onClick="location.href='view/newboard.jsp'"> &nbsp &nbsp
+	<input type="button" value="홈으로이동" onClick="location.href='view/home.jsp'">  <br/><br/>
 	<div>
 		<table class="boardtable">
 				<tr>
@@ -111,13 +106,23 @@
 			<%
 		}
 		%>
-		</div>
+		</div> <br/>
 		<%
 		
 	}
 	%>
-	<input type="button" value="추가하기" onClick="location.href='view/newboard.jsp'"> &nbsp &nbsp
-	<input type="button" value="홈으로이동" onClick="location.href='view/home.jsp'"> 
+	
+	<div>
+		<form class="search" action="/Board/BoardController?action=search" method="post">
+			<select name="search" >
+			    <option value="none">=== 검색 ===</option>
+			    <option value="agency">기관명</option>
+			    <option value="education">교육과정</option>
+			  </select> &nbsp
+			<input type="text" name="searchbar" placeholder="입력해주세요" /> &nbsp &nbsp
+			<button>검색하기</button>
+		</form>
+	</div>
 </body>
 </html>
 

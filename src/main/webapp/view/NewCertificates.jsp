@@ -74,7 +74,7 @@
 </style>
 <body>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-	<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+	<script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.0.272/jspdf.debug.js"></script>
 	<div id="certificates">
 		<div class="agency">
@@ -110,38 +110,28 @@
 	</div>
 	<script>
 	
-	function screenShot() {
-	html2canvas(document.querySelector("#certificates")).then(function(canvas) {
-        // Convert canvas to Blob object
-        canvas.toBlob(function(blob) {
-          // Create FormData object and append Blob object
-          var formData = new FormData();
-          formData.append('pdf', blob);
-
-          // Send AJAX request to server
-          $.ajax({
-            url: 'CompleteController?action=pdf_DL',
-            method: 'POST',
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function(response) {
-              console.log(response);
-            },
-            error: function(xhr, status, error) {
-              console.log(xhr.responseText);
-            }
-          });
-        }, 'application/pdf');
-		})	
-	}
 	
 	
-	// 페이지가 로드되면 convertAndRender 함수 호출
-    window.onload = function() {
-    	screenShot();
-    };
-    
+	html2canvas(document.querySelector("#certificates")).then(canvas => {
+		let dataURL = canvas.toDataURL("image/png");
+		
+		$.ajax({
+		    type: "POST",
+		    url: "CompleteController?action=pdf_DL",
+		    data: { "imgurl" : dataURL },
+		    success: function(response) {
+		        console.log(response);
+		    },
+		    error: function(xhr, status, error) {
+		        console.log(xhr.responseText);
+		    }
+		});
+		
+		});
+	
+	
+	
+	
     
     // viewer로 저장된 pdf 열어보기.
     //location.href = 'pdfjs/web/viewer.html?file=/file/html.pdf';
