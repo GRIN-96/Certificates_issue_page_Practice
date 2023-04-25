@@ -14,9 +14,14 @@
 </div>
 <br />
 <div align="center">
+  <h2> Server 💻 </h2>
+  <img src="https://img.shields.io/badge/apache tomcat-F8DC75?style=for-the-badge&logo=apachetomcat&logoColor=white">
+</div>
+<br />
+<div align="center">
   <h2> ⚒ </h2>
   <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">
-  <img src="https://img.shields.io/badge/eclipseide-#2C2255?style=for-the-badge&logo=eclipseide&logoColor=white">
+  <img src="https://img.shields.io/badge/Eclipse-2C2255?style=for-the-badge&logo=Eclipse%20IDE&logoColor=white">
   <img src="https://img.shields.io/badge/apache tomcat-F8DC75?style=for-the-badge&logo=apachetomcat&logoColor=white">
   <br/><br/><br/>
   <p>JSP 방식을 통해 TABLE CRUD 기능 구현 및 DB TABLE JOIN을 통해 DATA 값을 가져와 이수증을 자동으로 생성하고 발급하는 프로그램을 개발해 보았습니다. </p>
