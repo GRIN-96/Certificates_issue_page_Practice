@@ -1,19 +1,24 @@
-<img src="https://capsule-render.vercel.app/api?type=waving&color=auto&height=200&section=header&text=자동%20인증서%20발급%20프로그램%20개발&fontSize=60" />
+<img src="https://capsule-render.vercel.app/api?type=waving&color=auto&height=200&section=header&text=인증서%20발급%20프로그램%20개발&fontSize=60" />
 
 
 <div align="center">
-  <h2> Platform & Languege ✏ </h2>
-  <img src="https://img.shields.io/badge/spring-6DB33F?style=flat-square&logo=Spring&logoColor=green"/>
-  <img src="https://img.shields.io/badge/MariaDB-003545?style=flat-square&logo=MariaDB&logoColor=brown"/>
-  <img src="https://img.shields.io/badge/Java-007396?style=flat-square&logo=Java&logoColor=red"/>
-  <img src="https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=HTML5&logoColor=white"/>
+  <h2> Library & Languege ✏ </h2>
+  <img src="https://img.shields.io/badge/JAVA-007396?style=for-the-badge&logo=java&logoColor=white">
+  <img src="https://img.shields.io/badge/html-E34F26?style=for-the-badge&logo=html5&logoColor=white">
+  <img src="https://img.shields.io/badge/css-1572B6?style=for-the-badge&logo=css3&logoColor=white">
 </div>
 <br />
 <div align="center">
-  <h2> Tools ⚒ </h2>
-  <img src="https://img.shields.io/badge/IntelliJ IDEA-000000?style=flat-square&logo=IntelliJ IDEA&logoColor=white"/>
+  <h2> DB 📁 </h2>
+  <img src="https://img.shields.io/badge/mariaDB-003545?style=for-the-badge&logo=mariaDB&logoColor=white">
+</div>
+<br />
+<div align="center">
+  <h2> ⚒ </h2>
   <img src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=GitHub&logoColor=white"/>
+  <img src="https://img.shields.io/badge/eclipseide IDE-#2C2255?style=flat-square&logo=eclipseide IDE&logoColor=white"/>
+  <img src="https://img.shields.io/badge/apache tomcat-F8DC75?style=for-the-badge&logo=apachetomcat&logoColor=white">
   <br/><br/><br/>
-  <p>Spring framework의 jpa를 활용하여 간단한 게시판 CRUD Study를 해 보았습니다.</p>
+  <p>JSP 방식을 통해 TABLE CRUD 기능 구현 및 DB TABLE JOIN을 통해 DATA 값을 가져와 이수증을 자동으로 생성하고 발급하는 프로그램을 개발해 보았습니다. </p>
 </div>
 
