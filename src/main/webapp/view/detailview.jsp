@@ -59,6 +59,7 @@
 	<br/><br/>
 	<div>
 		<input type="button" value="이수자 목록 등록하기" onClick="location.href='BoardController?action=insert_complete&id=<%= board.getBoard_id() %>'"> &nbsp
+		<input type="button" value="전체삭제" onClick="location.href='#'">
 	</div>
 	<br/><br/>
 	<div>
@@ -75,7 +76,7 @@
 					<tr>
 						<td> <%= userList.get(i).getUser_id() %> </td>
 						<td> <%= userList.get(i).getUser_name() %> </td>
-						<td> <%= userList.get(i).getPass_fail() %> </td>
+						<td> <%= "P".equals(userList.get(i).getPass_fail()) ? "합격" : "불합격" %>  </td>
 						<td> <%= userList.get(i).getIssue_date() %> </td>
 						<td> <button onclick="location.href='/Board/CompleteController?action=delete&com_id=<%= userList.get(i).getComplete_id() %>&board_id=<%= board.getBoard_id() %>'">삭제</button> </td>
 					</tr>				

@@ -306,12 +306,11 @@ public class CompleteController extends HttpServlet {
 		}
 		else if ("pdf_DL".equals(action)) {
 			
-		  System.out.println("데이터 전달시도");
 			
 		  String imgurl = request.getParameter("imgurl");
 		  
 //		  System.out.println(imgurl.split(",")[1]);
-		  System.out.println(imgurl);
+//		  System.out.println(imgurl);
 		  
 		  
 		  
