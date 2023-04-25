@@ -1,52 +1,33 @@
 package controller;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.UUID;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.nio.file.StandardOpenOption;
-import java.net.URL;
 import java.util.Base64;
-import java.util.Base64.Decoder;
+import java.util.Date;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.imageio.ImageIO;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.Part;
-import javax.xml.bind.DatatypeConverter;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.common.PDRectangle;
-import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
-import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Image;
+import com.itextpdf.text.PageSize;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import DTO.BoardDTO;
@@ -329,32 +310,66 @@ public class CompleteController extends HttpServlet {
 			
 		  String imgurl = request.getParameter("imgurl");
 		  
-		  // Base64 디코딩
-		  byte[] imageBytes = Base64.getDecoder().decode(imgurl.split(",")[1]);
+//		  System.out.println(imgurl.split(",")[1]);
+		  System.out.println(imgurl);
+		  
+		  
+		  
+		  /* 전달받은 imgurl(base64 인코딩된)로 png 파일생성 */
+		  
+		  
+		  String filePath = "C:\\DEV\\spring\\Board\\src\\main\\webapp\\pdf";
+		  
+		  String imageDataBytes = imgurl.substring(imgurl.indexOf(",")+1);
+		  InputStream stream = new ByteArrayInputStream(Base64.getDecoder().decode(imageDataBytes.getBytes()));
+			
+		  File file = new File(filePath);
+		  if(file.exists() == false) file.mkdirs();
+		  
+		  file = new File(filePath + "/test.png");
+	      OutputStream out = null;
+	        try {
+	            out = new FileOutputStream(file);
+	            int read = 0;
+	            byte[] bytes = new byte[1024];
 
-		  try (
-				  ByteArrayInputStream bais = new ByteArrayInputStream(imageBytes);
-				  ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-
-				  BufferedImage image = ImageIO.read(bais);
-
-				  Document document = new Document();
-				  PdfWriter.getInstance(document, baos);
-
-				  document.open();
-				  Image pdfImage = Image.getInstance(image, null);
-				  document.add(pdfImage);
-				  document.newPage();
-				  document.close();
-				  
-				  // 파일저장
-				  Files.write(Paths.get("/pdf/html.pdf"), baos.toByteArray(), StandardOpenOption.APPEND);
-
-				  // 응답메세지
-				  response.getWriter().write("PDF file saved successfully.");
-				} catch (Exception e) {
-				  e.printStackTrace();
-				}
+	            while ((read = stream.read(bytes)) != -1) {
+	                out.write(bytes, 0, read);
+	            }
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        } finally {
+	            if (out != null) {
+	                out.close();
+	            }
+	            if (stream != null) {
+	            	stream.close();
+	            }
+	        }
+	        
+		  
+		  /* 전달받은 imgurl(base64 인코딩된)로 PDF 파일생성 */
+		  
+		  Document document = new Document(PageSize.A4, 20, 20, 20, 20);
+		  try {
+			PdfWriter.getInstance(document, new FileOutputStream(filePath + "/pass.pdf"));
+		} catch (FileNotFoundException | DocumentException e) {
+			e.printStackTrace();
+		}
+		  document.open();
+		  Image image = null;
+		try {
+			image = Image.getInstance(filePath + "/test.png");
+		} catch (BadElementException | IOException e) {
+			e.printStackTrace();
+		}
+		  try {
+			image.scalePercent(50f);	// 이미지 크기 조절 (%)
+			document.add(image);
+		} catch (DocumentException e) {
+			e.printStackTrace();
+		}
+		  document.close();
 		  
 		}
 	}

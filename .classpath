@@ -25,5 +25,6 @@
 	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/fontbox-2.0.28.jar"/>
 	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/itextpdf-5.5.9.jar"/>
 	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/pdfbox-app-2.0.28.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

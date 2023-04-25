@@ -112,6 +112,7 @@
 	
 	
 	
+	
 	html2canvas(document.querySelector("#certificates")).then(canvas => {
 		let dataURL = canvas.toDataURL("image/png");
 		
@@ -121,12 +122,12 @@
 		    data: { "imgurl" : dataURL },
 		    success: function(response) {
 		        console.log(response);
+		        location.href = 'pdfjs/web/viewer.html?file=/pdf/pass.pdf';
 		    },
 		    error: function(xhr, status, error) {
 		        console.log(xhr.responseText);
 		    }
 		});
-		
 		});
 	
 	
