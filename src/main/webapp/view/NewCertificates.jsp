@@ -14,6 +14,7 @@
 	SimpleDateFormat b_d = new SimpleDateFormat("yyyy년 MM월 dd일생");
 	SimpleDateFormat i_d = new SimpleDateFormat("yyyy년 MM월 dd일");  %>
 <% ArrayList<CertificatesDTO> certificates = (ArrayList<CertificatesDTO>) request.getAttribute("certificates"); %>
+<% int board_id = (int) request.getAttribute("board_id"); %>
 <style>
 	#certificates {
 		width : 600px;
@@ -144,9 +145,6 @@
 		    }
 		});
 		});
-	
-	
-	
 	
     
     // viewer로 저장된 pdf 열어보기.

@@ -73,6 +73,8 @@ public class CompleteController extends HttpServlet {
 			
 			String com_id = request.getParameter("com_id");
 			String board_id = request.getParameter("board_id");
+			String url = request.getParameter("url");
+			
 			
 			// 형변환
 			int complete_id = Integer.parseInt(com_id);
@@ -80,7 +82,30 @@ public class CompleteController extends HttpServlet {
 			
 			if (completeService.deleteCom(complete_id)) {
 				
-				//삭제 완료 시 - > 다시 board detail view로 
+				/* TABLE 삭제 성공 시 PDF 파일도 같이 삭제 */
+				String filePath = "C:\\DEV\\spring\\Board\\src\\main\\webapp\\pdf";
+				File file = new File(filePath + "/" + url);
+				
+				System.out.println(file);
+				// 지정한 경로에 파일이 존재하는 지 확인
+			    // 지정한 경로에 파일이 존재하는 경우 
+			    if (file.exists()){
+
+			      // 파일 삭제 성공시
+			      if (file.delete()){
+
+			        System.out.println("파일을 삭제 성공");
+
+			      //파일 삭제 실패시
+			      }else{
+			        System.out.println("파일 삭제 실패");
+			      }
+
+			    // 지정한 경로에 파일이 존재안하는 경우 
+			    }else{
+			      System.out.println("파일이 없습니다.");
+			    }
+				
 				BoardDTO boardDTO = new BoardDTO();
 				ArrayList<UserListDTO> userList = new ArrayList<UserListDTO>();
 				
@@ -102,10 +127,7 @@ public class CompleteController extends HttpServlet {
 					}
 				}
 				
-				request.setAttribute("board", boardDTO);
-				
-				RequestDispatcher dispatcher = request.getRequestDispatcher("/view/detailview.jsp");  // jsp 매핑
-				dispatcher.forward(request, response);  // 위 페이지로 제어 전달.
+				response.sendRedirect("../Board/BoardController?action=detail&board_id="+board_id);
 				
 			}else {
 				
@@ -269,6 +291,8 @@ public class CompleteController extends HttpServlet {
 			
 			if(completeService.insertComplete(lists)) {
 				
+				
+				
 				/* 등록된 이수자들의 이수증.pdf 생성 */
 				
 				ArrayList<CertificatesDTO> certificates = new ArrayList<CertificatesDTO>();
@@ -277,12 +301,16 @@ public class CompleteController extends HttpServlet {
 					certificates = completeService.certificatesAll(board_id);
 //					System.out.println(certificates);
 					
+					// db에 pdf 경로 등록
+					completeService.updatePdfUrl(board_id);
+					
 					
 				} catch (ClassNotFoundException | SQLException e) {
 					e.printStackTrace();
 				}
 				
 				request.setAttribute("certificates", certificates);
+				request.setAttribute("board_id", board_id);
 				
 				RequestDispatcher dispatcher = request.getRequestDispatcher("/view/NewCertificates.jsp");  // jsp 매핑
 				dispatcher.forward(request, response);  // 위 페이지로 제어 전달.
@@ -368,6 +396,22 @@ public class CompleteController extends HttpServlet {
 		  file.delete();
 		  
 		}
+//		else if ( "pdf_url".equals(action) ) {
+//			
+//			System.out.println("pdf주소 db에 넣는 중");
+//			
+//			String id = request.getParameter("board_id");
+//			int board_id = Integer.parseInt(id);
+//			
+//			try {
+//				if (completeService.updatePdfUrl(board_id)) {
+//					
+//					response.sendRedirect("../Board/BoardController?action=detail&board_id="+board_id);
+//				}
+//			} catch (ClassNotFoundException | SQLException | IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
 	}
 		
 	}

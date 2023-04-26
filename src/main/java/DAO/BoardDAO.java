@@ -304,7 +304,7 @@ public class BoardDAO {
 		con = DriverManager.getConnection(dbURL, dbID, dbPassword);  // DB에 연결
 		
 		// SQL QUERY 작성  = 아이디 찾기
-		String SQL = "SELECT c.complete_id, u.user_id, u.user_name, c.pass_fail, c.issue_date FROM USER u INNER JOIN complete c ON u.user_id =  c.user_id WHERE c.board_id = ?";
+		String SQL = "SELECT c.complete_id, u.user_id, u.user_name, c.pass_fail, c.issue_date, c.pdf_url FROM USER u INNER JOIN complete c ON u.user_id =  c.user_id WHERE c.board_id = ?";
 		
 		pstmt = con.prepareStatement(SQL); 
 		
@@ -320,6 +320,8 @@ public class BoardDAO {
 					rs.getString("user_name"),
 					rs.getString("pass_fail"),
 					rs.getDate("issue_date"));
+			
+			userListDTO.setPdf_url(rs.getString("pdf_url"));
 			
 			lists.add(userListDTO);  // 객체 생성 후 리스트추가
 		}

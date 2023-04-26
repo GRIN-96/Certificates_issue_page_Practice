@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
@@ -12,8 +13,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import DTO.BoardDTO;
+import DTO.CertificatesDTO;
 import DTO.UserListDTO;
 import service.BoardService;
+import service.CompleteService;
 
 @WebServlet("/BoardController")
 public class BoardController extends HttpServlet {
@@ -29,6 +32,7 @@ public class BoardController extends HttpServlet {
 	
 	// 서비스 클래스 사용을 위해 호출을 해줍니다.
 	private static BoardService boardService = BoardService.getInstance();
+	private static CompleteService completeService = CompleteService.getInstance();
 	
     public BoardController() {
         super();
@@ -181,6 +185,7 @@ public class BoardController extends HttpServlet {
 			
 			String id = request.getParameter("id");
 			long board_id = Long.parseLong(id); 
+			int b_id = Integer.parseInt(id);
 			
 			// insert를 위해 boardDTO 객체 생성
 			BoardDTO boardDTO = new BoardDTO(board_id, agency, education, content, position, issurer);
@@ -188,8 +193,24 @@ public class BoardController extends HttpServlet {
 			
 			if (boardService.boardUpdate(boardDTO)) {
 				
-				// 수정에 성공하면 페이지이동
-				response.sendRedirect("../Board/BoardController?action=detail&board_id="+board_id);
+				ArrayList<CertificatesDTO> certificates = new ArrayList<CertificatesDTO>();
+				
+				try {
+					// 수정된 내용으로 PDF 재생성 !
+					certificates = completeService.certificatesAll(b_id);
+					
+					
+				} catch (ClassNotFoundException | SQLException e) {
+					e.printStackTrace();
+				}
+				
+				request.setAttribute("certificates", certificates);
+				
+				RequestDispatcher dispatcher = request.getRequestDispatcher("/view/NewCertificates.jsp");  // jsp 매핑
+				dispatcher.forward(request, response);  // 위 페이지로 제어 전달.
+				
+//				// 수정에 성공하면 페이지이동
+//				response.sendRedirect("../Board/BoardController?action=detail&board_id="+board_id);
 				
 			}else {
 				// 실패 시 페이지 이동

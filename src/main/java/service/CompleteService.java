@@ -4,6 +4,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.security.auth.message.callback.PrivateKeyCallback.Request;
+
 import DAO.CompleteDAO;
 import DTO.CertificatesDTO;
 import DTO.CompleteDTO;
@@ -91,4 +93,14 @@ public class CompleteService {
 		return lists;
 	}
 	
+	public boolean updatePdfUrl(int board_id) throws ClassNotFoundException, SQLException {
+		
+		if (completeDAO.updatePdfUrl(board_id)) {
+			
+			return true;
+		}else {
+			return false;
+		}
+	}
+
 }

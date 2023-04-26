@@ -42,8 +42,8 @@
 						<td> <%= mylist.get(i).getEducation() %> </td>
 						<td> <%= mylist.get(i).getUser_name() %> </td>
 						<td> <%= mylist.get(i).getIssue_date() %> </td>
-						<td> <button onClick="location.href='CompleteController?action=pdf&board_id=<%= mylist.get(i).getComplete_id() %>'">저장</button> </td>
-					</tr>				
+						<td> <button onClick="location.href='pdfjs/web/viewer.html?file=/pdf/<%= mylist.get(i).getPdf_url() %>'">보기</button> </td>
+					</tr>	
 				<%
 						}}
 				%>

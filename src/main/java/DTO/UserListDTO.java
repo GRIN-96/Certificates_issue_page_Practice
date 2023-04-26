@@ -9,6 +9,7 @@ public class UserListDTO {
 	private String user_name;
 	private String pass_fail;
 	private Date issue_date;
+	private String pdf_url;
 	
 	// 생성자함수 
 	public UserListDTO() {}
@@ -21,6 +22,15 @@ public class UserListDTO {
 		this.user_name = user_name;
 		this.pass_fail = pass_fail;
 		this.issue_date = issue_date;
+	}
+
+	
+	public String getPdf_url() {
+		return pdf_url;
+	}
+
+	public void setPdf_url(String pdf_url) {
+		this.pdf_url = pdf_url;
 	}
 
 	public int getComplete_id() {
@@ -66,8 +76,9 @@ public class UserListDTO {
 	@Override
 	public String toString() {
 		return "UserListDTO [complete_id=" + complete_id + ", user_id=" + user_id + ", user_name=" + user_name
-				+ ", pass_fail=" + pass_fail + ", issue_date=" + issue_date + "]";
+				+ ", pass_fail=" + pass_fail + ", issue_date=" + issue_date + ", pdf_url=" + pdf_url + "]";
 	}
+
 
 
 	

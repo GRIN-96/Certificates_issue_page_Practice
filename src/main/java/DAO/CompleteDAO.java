@@ -88,7 +88,7 @@ public class CompleteDAO {
 		con = DriverManager.getConnection(dbURL, dbID, dbPassword);  // DB에 연결
 		
 		// SQL QUERY 작성  = 아이디 찾기
-		String SQL = "SELECT c.complete_id, b.agency, b.education, u.user_name, c.issue_date, b.content, b.position, b.issurer, c.pass_fail, u.user_birthday  FROM USER u INNER JOIN complete c INNER JOIN board b ON u.user_id =  c.user_id AND b.board_id  = c.board_id  WHERE c.user_id  = ?";
+		String SQL = "SELECT c.complete_id, b.agency, b.education, u.user_name, c.issue_date, b.content, b.position, b.issurer, c.pass_fail, u.user_birthday, c.pdf_url  FROM USER u INNER JOIN complete c INNER JOIN board b ON u.user_id =  c.user_id AND b.board_id  = c.board_id  WHERE c.user_id  = ? ORDER BY c.issue_date DESC";
 		
 		pstmt = con.prepareStatement(SQL); 
 		
@@ -108,7 +108,8 @@ public class CompleteDAO {
 					rs.getString("position"),
 					rs.getString("issurer"),
 					rs.getString("pass_fail"),
-					rs.getDate("user_birthday"));
+					rs.getDate("user_birthday"),
+					rs.getString("pdf_url"));
 			
 			lists.add(certificatesDTO);  // 객체 생성 후 리스트추가
 		}
@@ -125,7 +126,7 @@ public class CompleteDAO {
 		con = DriverManager.getConnection(dbURL, dbID, dbPassword);  // DB에 연결
 		
 		// SQL QUERY 작성  = 아이디, 게시판 번호로 찾기.
-		String SQL = "SELECT c.complete_id, b.agency, b.education, u.user_name, c.issue_date, b.content, b.position, b.issurer, c.pass_fail, u.user_birthday FROM USER u INNER JOIN complete c INNER JOIN board b ON u.user_id =  c.user_id AND b.board_id  = c.board_id  WHERE c.user_id  = ? AND  c.complete_id  = ?";
+		String SQL = "SELECT c.complete_id, b.agency, b.education, u.user_name, c.issue_date, b.content, b.position, b.issurer, c.pass_fail, u.user_birthday, c.pdf_url FROM USER u INNER JOIN complete c INNER JOIN board b ON u.user_id =  c.user_id AND b.board_id  = c.board_id  WHERE c.user_id  = ? AND  c.complete_id  = ?";
 		
 		pstmt = con.prepareStatement(SQL); 
 		
@@ -146,7 +147,8 @@ public class CompleteDAO {
 					rs.getString("position"),
 					rs.getString("issurer"),
 					rs.getString("pass_fail"),
-					rs.getDate("user_birthday"));
+					rs.getDate("user_birthday"),
+					rs.getString("pdf_url"));
 			
 		}
 		
@@ -162,7 +164,7 @@ public class CompleteDAO {
 			con = DriverManager.getConnection(dbURL, dbID, dbPassword);  // DB에 연결
 			
 			// SQL QUERY 작성  = 아이디 찾기
-			String SQL = "SELECT c.complete_id , b.agency, b.education, u.user_name, c.issue_date, b.content, b.position, b.issurer, c.pass_fail, u.user_birthday  FROM user u INNER JOIN complete c INNER JOIN board b ON u.user_id =  c.user_id AND b.board_id  = c.board_id  WHERE c.board_id  = ? AND c.pass_fail = 'P'";
+			String SQL = "SELECT c.complete_id , b.agency, b.education, u.user_name, c.issue_date, b.content, b.position, b.issurer, c.pass_fail, u.user_birthday, c.pdf_url  FROM user u INNER JOIN complete c INNER JOIN board b ON u.user_id =  c.user_id AND b.board_id  = c.board_id  WHERE c.board_id  = ? AND c.pass_fail = 'P'";
 			
 			pstmt = con.prepareStatement(SQL); 
 			
@@ -182,12 +184,36 @@ public class CompleteDAO {
 						rs.getString("position"),
 						rs.getString("issurer"),
 						rs.getString("pass_fail"),
-						rs.getDate("user_birthday"));
+						rs.getDate("user_birthday"),
+						rs.getString("pdf_url"));
 				
 				lists.add(certificatesDTO);  // 객체 생성 후 리스트추가
 			}
 			
 			return lists;
 	}
+
+	public boolean updatePdfUrl(int board_id) throws ClassNotFoundException, SQLException {
+		
+		Class.forName("org.mariadb.jdbc.Driver");  // JDBC Driver 클래스를 로드하기 위해 사용됩니다. = jdbc 접근을 도와줍니다.
+		con = DriverManager.getConnection(dbURL, dbID, dbPassword);  // DB에 연결
+		
+		// SQL QUERY 작성  = 아이디 찾기
+		String SQL = "UPDATE USER u INNER JOIN complete c ON u.user_id =  c.user_id SET c.pdf_url = CONCAT(u.user_name , c.complete_id,'.pdf') WHERE c.pass_fail = 'P' AND c.board_id = ? ";
+		
+		pstmt = con.prepareStatement(SQL); 
+		pstmt.setInt(1, board_id);
+	
+		// 쿼리 실행
+		// compile된 DML문을 실행시켜 성공적으로 수행될 경우 1, 실패의 경우 0을 반환합니다.
+		int result = pstmt.executeUpdate(); 
+		if (result == 1) {
+			System.out.println("pdf 경로 입력이완료되었습니다..");
+			return true;
+		}else {
+			return false;
+		}
+	}
+
 	
 }

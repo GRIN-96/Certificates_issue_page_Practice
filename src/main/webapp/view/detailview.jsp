@@ -78,7 +78,7 @@
 						<td> <%= userList.get(i).getUser_name() %> </td>
 						<td> <%= "P".equals(userList.get(i).getPass_fail()) ? "합격" : "불합격" %>  </td>
 						<td> <%= userList.get(i).getIssue_date() %> </td>
-						<td> <button onclick="location.href='/Board/CompleteController?action=delete&com_id=<%= userList.get(i).getComplete_id() %>&board_id=<%= board.getBoard_id() %>'">삭제</button> </td>
+						<td> <button onclick="location.href='/Board/CompleteController?action=delete&com_id=<%= userList.get(i).getComplete_id() %>&board_id=<%= board.getBoard_id() %>&url=<%= userList.get(i).getPdf_url() %>'">삭제</button> </td>
 					</tr>				
 				<%
 					}
