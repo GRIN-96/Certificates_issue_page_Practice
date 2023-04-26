@@ -154,4 +154,40 @@ public class CompleteDAO {
 		
 	}
 	
+	public ArrayList<CertificatesDTO> certificatesAll(int board_id) throws ClassNotFoundException, SQLException {
+			
+			ArrayList<CertificatesDTO> lists = new ArrayList<CertificatesDTO>();
+			
+			Class.forName("org.mariadb.jdbc.Driver");  // JDBC Driver 클래스를 로드하기 위해 사용됩니다. = jdbc 접근을 도와줍니다.
+			con = DriverManager.getConnection(dbURL, dbID, dbPassword);  // DB에 연결
+			
+			// SQL QUERY 작성  = 아이디 찾기
+			String SQL = "SELECT c.complete_id , b.agency, b.education, u.user_name, c.issue_date, b.content, b.position, b.issurer, c.pass_fail, u.user_birthday  FROM user u INNER JOIN complete c INNER JOIN board b ON u.user_id =  c.user_id AND b.board_id  = c.board_id  WHERE c.board_id  = ? AND c.pass_fail = 'P'";
+			
+			pstmt = con.prepareStatement(SQL); 
+			
+			pstmt.setInt(1, board_id);
+			
+			rs = pstmt.executeQuery(); // 모든 정보 담기
+			
+			while (rs.next()) {
+				
+				CertificatesDTO certificatesDTO = new CertificatesDTO(
+						rs.getInt("complete_id"),
+						rs.getString("agency"),
+						rs.getString("education"),
+						rs.getString("user_name"),
+						rs.getDate("issue_date"),
+						rs.getString("content"),
+						rs.getString("position"),
+						rs.getString("issurer"),
+						rs.getString("pass_fail"),
+						rs.getDate("user_birthday"));
+				
+				lists.add(certificatesDTO);  // 객체 생성 후 리스트추가
+			}
+			
+			return lists;
+	}
+	
 }

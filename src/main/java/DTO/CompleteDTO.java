@@ -9,6 +9,7 @@ public class CompleteDTO {
 	private int board_id;
 	private Date issue_date;
 	private String pass_fail;
+	private String pdf_url;
 	
 	public CompleteDTO() {}
 	
@@ -30,6 +31,17 @@ public class CompleteDTO {
 		this.issue_date = issue_date;
 		this.pass_fail = pass_fail;
 		
+	}
+	
+	
+
+	public String getPdf_url() {
+		return pdf_url;
+	}
+
+
+	public void setPdf_url(String pdf_url) {
+		this.pdf_url = pdf_url;
 	}
 
 

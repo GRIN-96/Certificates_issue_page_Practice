@@ -2,15 +2,18 @@
     pageEncoding="UTF-8"%>
 <%@ page import="DTO.*" %>
 <%@ page import="DAO.*" %>
+<%@ page import="java.text.*" %>
+<%@ page import="java.util.*" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>이수증 PDF 발급</title>
 </head>
-<% CertificatesDTO certificatesDTO = (CertificatesDTO) request.getAttribute("certificatesDTO"); %>
-<% String b_id = request.getParameter("board_id"); %>
-<% int board_id = Integer.parseInt(b_id); %>
+<% // 포멧 생성
+	SimpleDateFormat b_d = new SimpleDateFormat("yyyy년 MM월 dd일생");
+	SimpleDateFormat i_d = new SimpleDateFormat("yyyy년 MM월 dd일");  %>
+<% ArrayList<CertificatesDTO> certificates = (ArrayList<CertificatesDTO>) request.getAttribute("certificates"); %>
 <style>
 	#certificates {
 		width : 600px;
@@ -76,34 +79,46 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 	<script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.0.272/jspdf.debug.js"></script>
-	<div id="certificates">
+	<% for (int i=0; i < certificates.size(); i++) { %>
+	<style>
+		#certificates<%= i %> {
+		width : 600px;
+		height : 900px;
+		border : 1px solid black;
+		padding : 75px 113px 57px 113px; 
+		text-align : center;
+		font-weight: bold;
+		font-size : 24px;
+	}
+	</style>
+	<div id="certificates<%= i %>">
 		<div class="agency">
-			<a><%= certificatesDTO.getAgency() %></a><br/>
+			<a><%= certificates.get(i).getAgency() %></a><br/>
 		</div>
 		<div class="education">
-			<a><%= certificatesDTO.getEducation() %></a><br/>
+			<a><%= certificates.get(i).getEducation() %></a><br/>
 		</div><br/><br/>
 		<div class="title">
 			<a>이 수 증</a>
 		</div><br/><br/>
 		<div class="name">
-			<a><%= certificatesDTO.getUser_name() %></a>
+			<a><%= certificates.get(i).getUser_name() %></a>
 		</div>
 		<div class="birthday">
-			<a><%= request.getAttribute("u_birthday") %></a><br/>
+			<a> <%= b_d.format(certificates.get(i).getUser_birthday()) %></a><br/>
 		</div><br/><br/>
 		<div class="content">
-			&nbsp;&nbsp;<a><%= certificatesDTO.getContent() %></a>
+			&nbsp;&nbsp;<a><%= certificates.get(i).getContent() %></a>
 		</div><br/><br/>
 		<div class="issueDate">
-			<a><%= request.getAttribute("b_issue") %></a><br/>
+			<a><%= i_d.format(certificates.get(i).getIssue_date()) %></a><br/>
 		</div><br/><br/>
 		<div class="issued">
 			<div class="position">
-				<a><%= certificatesDTO.getPosition() %></a>
+				<a><%= certificates.get(i).getPosition() %></a>
 			</div>
 			<div class="issurer">
-				<a><%= certificatesDTO.getIssurer() %></a>
+				<a><%= certificates.get(i).getIssurer() %></a>
 			</div>
 			<img class="image" style="height:100px; width:100px;" src="img/도장1.png"></img>
 		</div>
@@ -113,16 +128,16 @@
 	
 	
 	
-	html2canvas(document.querySelector("#certificates")).then(canvas => {
+	html2canvas(document.querySelector("#certificates"+ <%= i %>)).then(canvas => {
 		let dataURL = canvas.toDataURL("image/png");
 		
 		$.ajax({
 		    type: "POST",
 		    url: "CompleteController?action=pdf_DL",
-		    data: { "imgurl" : dataURL },
+		    data: { "imgurl" : dataURL, "name" : "<%= certificates.get(i).getUser_name() %>" ,
+		    	"c_id" : "<%= certificates.get(i).getComplete_id() %>"} ,
 		    success: function(response) {
 		        console.log(response);
-		        location.href = 'pdfjs/web/viewer.html?file=/pdf/pass.pdf';
 		    },
 		    error: function(xhr, status, error) {
 		        console.log(xhr.responseText);
@@ -138,6 +153,6 @@
     //location.href = 'pdfjs/web/viewer.html?file=/file/html.pdf';
 	
   	</script>
-	
+	<% } %>
 </body>
 </html>

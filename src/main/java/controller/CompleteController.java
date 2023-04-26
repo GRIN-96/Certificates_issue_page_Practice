@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -268,32 +269,24 @@ public class CompleteController extends HttpServlet {
 			
 			if(completeService.insertComplete(lists)) {
 				
-				// 성공 시 
-				BoardDTO boardDTO = new BoardDTO();
-				ArrayList<UserListDTO> userList = new ArrayList<UserListDTO>();
+				/* 등록된 이수자들의 이수증.pdf 생성 */
 				
-				boardDTO = boardService.searchId(board_id);
+				ArrayList<CertificatesDTO> certificates = new ArrayList<CertificatesDTO>();
 				
-				// long -> int 형변환
-				int board_id1 = boardDTO.getBoard_id().intValue();
-				
-				
-				if (boardDTO != null) {
+				try {
+					certificates = completeService.certificatesAll(board_id);
+//					System.out.println(certificates);
 					
-					// 해당 교육의 이수자목록 가져오기.
-					userList = boardService.userInfo(board_id1);
 					
-					if ( userList != null ) {
-						
-						request.setAttribute("userList", userList);
-						
-					}
+				} catch (ClassNotFoundException | SQLException e) {
+					e.printStackTrace();
 				}
 				
-				request.setAttribute("board", boardDTO);
+				request.setAttribute("certificates", certificates);
 				
-				RequestDispatcher dispatcher = request.getRequestDispatcher("/view/detailview.jsp");  // jsp 매핑
+				RequestDispatcher dispatcher = request.getRequestDispatcher("/view/NewCertificates.jsp");  // jsp 매핑
 				dispatcher.forward(request, response);  // 위 페이지로 제어 전달.
+//				response.sendRedirect("../Board/BoardController?action=detail&board_id="+board_id);
 			}
 			else {
 				
@@ -306,8 +299,11 @@ public class CompleteController extends HttpServlet {
 		}
 		else if ("pdf_DL".equals(action)) {
 			
-			
+		
+		  System.out.println("pdf 생성 시도중");
 		  String imgurl = request.getParameter("imgurl");
+		  String name = request.getParameter("name");
+		  String c_id = request.getParameter("c_id");
 		  
 //		  System.out.println(imgurl.split(",")[1]);
 //		  System.out.println(imgurl);
@@ -351,7 +347,7 @@ public class CompleteController extends HttpServlet {
 		  
 		  Document document = new Document(PageSize.A4, 20, 20, 20, 20);
 		  try {
-			PdfWriter.getInstance(document, new FileOutputStream(filePath + "/pass.pdf"));
+			PdfWriter.getInstance(document, new FileOutputStream(filePath + "/" + name + c_id + ".pdf"));
 		} catch (FileNotFoundException | DocumentException e) {
 			e.printStackTrace();
 		}
@@ -369,6 +365,7 @@ public class CompleteController extends HttpServlet {
 			e.printStackTrace();
 		}
 		  document.close();
+		  file.delete();
 		  
 		}
 	}

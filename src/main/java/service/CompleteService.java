@@ -83,4 +83,12 @@ public class CompleteService {
 		
 	}
 	
+	public ArrayList<CertificatesDTO> certificatesAll(int board_id) throws ClassNotFoundException, SQLException {
+		
+		ArrayList<CertificatesDTO> lists = new ArrayList<CertificatesDTO>();
+		lists = completeDAO.certificatesAll(board_id);
+		
+		return lists;
+	}
+	
 }
