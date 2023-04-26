@@ -80,7 +80,9 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 	<script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.0.272/jspdf.debug.js"></script>
-	<% for (int i=0; i < certificates.size(); i++) { %>
+	<% for (int i=0; i < certificates.size(); i++) { 
+		if ("P".equals(certificates.get(i).getPass_fail())) {
+		%>
 	<style>
 		#certificates<%= i %> {
 		width : 600px;
@@ -124,6 +126,33 @@
 			<img class="image" style="height:100px; width:100px;" src="img/도장1.png"></img>
 		</div>
 	</div>
+	<% if (i == certificates.size()-1) { %>
+	<script>
+	
+	
+	
+	
+	html2canvas(document.querySelector("#certificates"+ <%= i %>)).then(canvas => {
+		let dataURL = canvas.toDataURL("image/png");
+		
+		$.ajax({
+		    type: "POST",
+		    url: "CompleteController?action=pdf_DL",
+		    data: { "imgurl" : dataURL, "name" : "<%= certificates.get(i).getUser_name() %>" ,
+		    	"c_id" : "<%= certificates.get(i).getComplete_id() %>"} ,
+		    success: function(response) {
+		        console.log(response);
+		        location.href = "/Board/BoardController?action=detail&board_id=<%= board_id %>"
+		    },
+		    error: function(xhr, status, error) {
+		        console.log(xhr.responseText);
+		    }
+		});
+		});
+	
+	
+  	</script>
+	<% } else { %>
 	<script>
 	
 	
@@ -147,10 +176,8 @@
 		});
 	
     
-    // viewer로 저장된 pdf 열어보기.
-    //location.href = 'pdfjs/web/viewer.html?file=/file/html.pdf';
 	
   	</script>
-	<% } %>
+	<% }}} %>
 </body>
 </html>

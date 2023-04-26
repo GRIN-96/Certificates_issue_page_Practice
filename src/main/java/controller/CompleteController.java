@@ -396,22 +396,6 @@ public class CompleteController extends HttpServlet {
 		  file.delete();
 		  
 		}
-//		else if ( "pdf_url".equals(action) ) {
-//			
-//			System.out.println("pdf주소 db에 넣는 중");
-//			
-//			String id = request.getParameter("board_id");
-//			int board_id = Integer.parseInt(id);
-//			
-//			try {
-//				if (completeService.updatePdfUrl(board_id)) {
-//					
-//					response.sendRedirect("../Board/BoardController?action=detail&board_id="+board_id);
-//				}
-//			} catch (ClassNotFoundException | SQLException | IOException e) {
-//				e.printStackTrace();
-//			}
-//		}
 	}
 		
 	}

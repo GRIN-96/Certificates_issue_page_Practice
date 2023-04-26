@@ -205,6 +205,7 @@ public class BoardController extends HttpServlet {
 				}
 				
 				request.setAttribute("certificates", certificates);
+				request.setAttribute("board_id", b_id);
 				
 				RequestDispatcher dispatcher = request.getRequestDispatcher("/view/NewCertificates.jsp");  // jsp 매핑
 				dispatcher.forward(request, response);  // 위 페이지로 제어 전달.
